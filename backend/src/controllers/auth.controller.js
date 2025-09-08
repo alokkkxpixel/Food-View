@@ -82,10 +82,99 @@ async function logoutUser(req, res) {
   });
 }
 
-async function registerFoodPartner(req, res) {}
+async function registerFoodPartner(req, res) {
+  const { name, email, password } = req.body;
+  const isFoodpartnerExist = await foodModel.findOne({
+    email,
+  });
+
+  if (isFoodpartnerExist) {
+    return res.status(400).json({
+      message: "Your Food Partner Account is already existed!",
+    });
+  }
+
+  const hashPassword = await bcrypt.hash(password, 10);
+
+  const foodPartner = await foodModel.create({
+    name,
+    email,
+    password: hashPassword,
+  });
+  const token = jwt.sign(
+    {
+      id: foodPartner._id,
+    },
+    process.env.JWT_SECRET
+  );
+
+  res.cookie("token", token);
+
+  return res.status(201).json({
+    message: "Your Foodpartner Account is created successfully!",
+    user: {
+      _id: foodPartner._id,
+      email: foodPartner.email,
+      name: foodPartner.name,
+    },
+  });
+}
+
+async function loginFoodPartner(req, res) {
+  const { email, password } = req.body;
+
+  const foodpartner = await foodModel.findOne({
+    email,
+  });
+
+  if (!foodpartner) {
+    return res.status(400).json({
+      message: "Inavaild email or password",
+    });
+  }
+
+  const isFoodpartnerExist = await bcrypt.compare(
+    password,
+    foodpartner.password
+  );
+
+  if (!isFoodpartnerExist) {
+    return res.status(400).json({
+      message: "Inavaild email or password",
+    });
+  }
+
+  const token = jwt.sign(
+    {
+      id: foodpartner._id,
+    },
+    process.env.JWT_SECRET
+  );
+
+  res.cookie("token", token);
+
+  return res.status(201).json({
+    message: "Foodpartner login successfully!!",
+    foodPartner: {
+      _id: foodpartner._id,
+      email: foodpartner.email,
+    },
+  });
+}
+
+async function logoutFoodPartner(req, res) {
+  res.clearCookie("token");
+
+  return res.status(200).json({
+    message: "FoodPartner logout successfully!!",
+  });
+}
 
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
+  registerFoodPartner,
+  loginFoodPartner,
+  logoutFoodPartner,
 };
