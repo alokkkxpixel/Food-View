@@ -5,3 +5,17 @@ const imagekit = new ImageKit({
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
   urlEndpoint: process.env.IMAGEKIT_ENDPOINT,
 });
+
+
+async function uploadFile(file, fileName) {
+  const result = await imagekit.upload({
+    file: file,
+    fileName: fileName,
+  });
+
+  return result;
+}
+
+module.exports = {
+  uploadFile,
+};
