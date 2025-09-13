@@ -20,6 +20,9 @@ router.post(
   createFoodValidator,
   createFood
 );
-router.get("/", getFoodItems);
-router.get("/:id", findFoodById);
+
+// * GET /api/food/ [protected]
+router.get("/", authFoodPartnerMiddleware, getFoodItems);
+
+
 module.exports = router;

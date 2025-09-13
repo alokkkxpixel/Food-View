@@ -5,7 +5,8 @@ import UserLogin from "../pages/UserLogin";
 import FoodPartnerLogin from "../pages/FoodPartnerLogin";
 import FoodPartnerRegister from "../pages/FoodPartnerRegister";
 import Home from "../pages/Home";
-import CreateFood from "../pages/CreateFood";
+import CreateFood from "../food-partner/CreateFood";
+import Profile from "../food-partner/Profile";
 
 const AppRouter = () => {
   return (
@@ -17,6 +18,7 @@ const AppRouter = () => {
         <Route path="/foodpartner/register" element={<FoodPartnerRegister />} />
         <Route path="/home" element={<Home />} />
         <Route path="/create-food" element={<CreateFood />} />
+        <Route path="/Profile" element={<Profile />} />
       </Routes>
     </Router>
   );
