@@ -24,6 +24,7 @@ async function createFood(req, res) {
     const foodItem = await foodDao.createFoodItem({
       name: req.body.name, // ✅ use req.body instead of req.name
       description: req.body.description, // ✅ fixed typo (was req.decription)
+      price: req.body.price,
       video: fileUploadedResult.url,
       foodPartner: req.foodPartner._id,
     });

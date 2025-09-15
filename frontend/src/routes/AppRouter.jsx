@@ -18,7 +18,7 @@ const AppRouter = () => {
         <Route path="/foodpartner/register" element={<FoodPartnerRegister />} />
         <Route path="/home" element={<Home />} />
         <Route path="/create-food" element={<CreateFood />} />
-        <Route path="/Profile" element={<Profile />} />
+        <Route path="/food-partner/:id" element={<Profile />} />
       </Routes>
     </Router>
   );
