@@ -32,6 +32,7 @@ router.get("/", authFoodPartnerMiddleware, getFoodItems);
 
 router.post("/like", authUserMiddleware, likeToggle);
 router.post("/save", authUserMiddleware, saveFood);
+router.get("/savedfood", authUserMiddleware, getFoodItems);
 
 
 module.exports = router;

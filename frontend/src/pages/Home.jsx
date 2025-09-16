@@ -106,6 +106,7 @@ const Home = () => {
   };
 
   // Toggle Save + Update Backend + LocalStorage
+  // Frontend toggleSave function without localStorage
   const toggleSave = async (item) => {
     try {
       const response = await axios.post(
@@ -115,9 +116,8 @@ const Home = () => {
       );
 
       console.log(response.data);
-      let savedVideos = JSON.parse(localStorage.getItem("savedVideos")) || [];
 
-      if (response.data.save) {
+      if (response.data.saved) {
         // Video saved
         setVideos((prev) =>
           prev.map((v) =>
@@ -127,9 +127,6 @@ const Home = () => {
           )
         );
         setSaved((prev) => ({ ...prev, [item._id]: true }));
-
-        // Add to local storage
-        savedVideos.push(item);
       } else {
         // Video unsaved
         setVideos((prev) =>
@@ -140,12 +137,7 @@ const Home = () => {
           )
         );
         setSaved((prev) => ({ ...prev, [item._id]: false }));
-
-        // Remove from local storage
-        savedVideos = savedVideos.filter((v) => v._id !== item._id);
       }
-
-      localStorage.setItem("savedVideos", JSON.stringify(savedVideos));
     } catch (err) {
       console.error("Error saving video:", err);
     }
@@ -155,7 +147,7 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState("home");
   const handleNav = (tab) => {
     setActiveTab(tab);
-    if (tab === "saved") navigate("/savePage");
+    if (tab === "saved") navigate("/savedfood");
   };
 
   return (

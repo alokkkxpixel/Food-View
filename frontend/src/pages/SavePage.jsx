@@ -7,6 +7,7 @@ import {
   Bookmark,
   Home as HomeIcon,
 } from "lucide-react";
+import axios from "axios";
 
 const SavePage = () => {
   const [videos, setVideos] = useState([]);
@@ -17,10 +18,27 @@ const SavePage = () => {
   const videoRefs = useRef([]);
   const navigate = useNavigate();
 
-  // Load saved videos from localStorage
+  // Load saved videos from backend
   useEffect(() => {
-    const savedVideos = JSON.parse(localStorage.getItem("savedVideos")) || [];
-    setVideos(savedVideos);
+    const fetchSavedVideos = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/food/saved", {
+          withCredentials: true,
+        });
+
+        const savedFood = res.data.savedFoods.map((item) => ({
+          _id: item.food._id,
+          video: item.food.video,
+          description: item.food.description,
+          likeCount: item.food.likeCount,
+          savesCount: item.food.savesCount,
+        }));
+        setVideos(savedFood);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSavedVideos();
   }, []);
 
   // Play/Pause on scroll
