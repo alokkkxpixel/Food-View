@@ -12,10 +12,6 @@ const likeSchema = new mongoose.Schema(
       ref: "food",
       required: true,
     },
-    likeCount: {
-      type: Number,
-      default: 0,
-    },
   },
   {
     timestamps: true,

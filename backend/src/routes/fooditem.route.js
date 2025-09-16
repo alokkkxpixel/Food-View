@@ -4,7 +4,10 @@ const {
   getFoodItems,
   saveFood,
 } = require("../controllers/foodItem.controller");
-const { authFoodPartnerMiddleware } = require("../middlewares/auth.middleware");
+const {
+  authFoodPartnerMiddleware,
+  authUserMiddleware,
+} = require("../middlewares/auth.middleware");
 const multer = require("multer");
 const { createFoodValidator } = require("../validators/food.validator");
 const { findFoodById } = require("../dao/food.dao");
@@ -27,8 +30,8 @@ router.post(
 // * GET /api/food/ [protected]
 router.get("/", authFoodPartnerMiddleware, getFoodItems);
 
-router.post("/like", authFoodPartnerMiddleware, likeToggle);
-router.post("/save", authFoodPartnerMiddleware, saveFood);
+router.post("/like", authUserMiddleware, likeToggle);
+router.post("/save", authUserMiddleware, saveFood);
 
 
 module.exports = router;

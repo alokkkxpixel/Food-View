@@ -1,18 +1,25 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Heart,
   MoreVertical,
   ArrowLeft,
   Utensils,
+  Bookmark,
+  Home as HomeIcon,
 } from "lucide-react";
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
   const [liked, setLiked] = useState({});
+  const [saved, setSaved] = useState({});
+  const [showHeader, setShowHeader] = useState(true);
+
+  const lastScrollY = useRef(0);
   const videoRefs = useRef([]);
+  const navigate = useNavigate();
 
   // Fetch videos
   useEffect(() => {
@@ -50,18 +57,13 @@ const Home = () => {
   }, [videos]);
 
   // Show/hide header on scroll
-  const [showHeader, setShowHeader] = useState(true);
-  const lastScrollY = useRef(0);
-
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
 
       if (currentY > lastScrollY.current) {
-        // Scrolling down → hide header
         setShowHeader(false);
       } else if (currentY < lastScrollY.current) {
-        // Scrolling up → show header
         setShowHeader(true);
       }
 
@@ -72,9 +74,88 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Toggle like
-  const toggleLike = (id) => {
-    setLiked((prev) => ({ ...prev, [id]: !prev[id] }));
+  // Toggle Like + Update Backend
+  const toggleLike = async (item) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/food/like",
+        { foodId: item._id },
+        { withCredentials: true }
+      );
+
+      if (response.data.like) {
+        // Video liked
+        setVideos((prev) =>
+          prev.map((v) =>
+            v._id === item._id ? { ...v, likeCount: (v.likeCount || 0) + 1 } : v
+          )
+        );
+        setLiked((prev) => ({ ...prev, [item._id]: true }));
+      } else {
+        // Video unliked
+        setVideos((prev) =>
+          prev.map((v) =>
+            v._id === item._id ? { ...v, likeCount: (v.likeCount || 1) - 1 } : v
+          )
+        );
+        setLiked((prev) => ({ ...prev, [item._id]: false }));
+      }
+    } catch (err) {
+      console.error("Error liking video:", err);
+    }
+  };
+
+  // Toggle Save + Update Backend + LocalStorage
+  const toggleSave = async (item) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/food/save",
+        { foodId: item._id },
+        { withCredentials: true }
+      );
+
+      console.log(response.data);
+      let savedVideos = JSON.parse(localStorage.getItem("savedVideos")) || [];
+
+      if (response.data.save) {
+        // Video saved
+        setVideos((prev) =>
+          prev.map((v) =>
+            v._id === item._id
+              ? { ...v, savesCount: (v.savesCount || 0) + 1 }
+              : v
+          )
+        );
+        setSaved((prev) => ({ ...prev, [item._id]: true }));
+
+        // Add to local storage
+        savedVideos.push(item);
+      } else {
+        // Video unsaved
+        setVideos((prev) =>
+          prev.map((v) =>
+            v._id === item._id
+              ? { ...v, savesCount: (v.savesCount || 1) - 1 }
+              : v
+          )
+        );
+        setSaved((prev) => ({ ...prev, [item._id]: false }));
+
+        // Remove from local storage
+        savedVideos = savedVideos.filter((v) => v._id !== item._id);
+      }
+
+      localStorage.setItem("savedVideos", JSON.stringify(savedVideos));
+    } catch (err) {
+      console.error("Error saving video:", err);
+    }
+  };
+
+  // Footer navigation
+  const [activeTab, setActiveTab] = useState("home");
+  const handleNav = (tab) => {
+    setActiveTab(tab);
+    if (tab === "saved") navigate("/savePage");
   };
 
   return (
@@ -85,12 +166,9 @@ const Home = () => {
           showHeader ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        {/* Back Arrow */}
         <Link to="/" className="absolute left-4 text-white">
           <ArrowLeft size={26} />
         </Link>
-
-        {/* App Name + Icon */}
         <h1 className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-white">
           <Utensils size={24} /> FoodApp
         </h1>
@@ -117,7 +195,7 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
           {/* Dish Name + Price */}
-          <div className="absolute top-6 left-3">
+          <div className="absolute top-15 left-3">
             <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
               <span className="w-[6px] h-[6px] bg-red-500 p-1 rounded-full"></span>
               {video.name}
@@ -128,34 +206,43 @@ const Home = () => {
           </div>
 
           {/* Right Actions */}
-          <div className="absolute right-4 bottom-40 flex flex-col items-center gap-6">
-            <button
-              onClick={() => toggleLike(video._id)}
-              className="focus:outline-none"
-            >
+          <div className="absolute right-4 bottom-45 flex flex-col items-center gap-6">
+            {/* Like */}
+            <button onClick={() => toggleLike(video)}>
               <Heart
-                size={32}
-                className={`transition-all duration-300 ${
+                size={35}
+                className={`transition-all bg-gray-300/10 backdrop-blur-md p-1 rounded-full duration-300 ${
                   liked[video._id]
                     ? "fill-red-500 text-red-500 scale-110"
                     : "text-white hover:scale-110"
                 }`}
               />
+              <h2 className="mt-1 text-white text-sm">
+                {video.likeCount || 0}
+              </h2>
             </button>
-            <button className="focus:outline-none">
-              <MoreVertical
-                size={28}
-                className="text-white hover:text-gray-300 transition"
+
+            {/* Save */}
+            <button onClick={() => toggleSave(video)}>
+              <Bookmark
+                size={32}
+                className={`transition-all bg-gray-300/10 backdrop-blur-md p-1 rounded-full duration-300 ${
+                  saved[video._id]
+                    ? "fill-white text-white scale-110"
+                    : "text-white hover:scale-110"
+                }`}
               />
+              <h2 className="mt-1 text-white text-sm">
+                {video.savesCount || 0}
+              </h2>
             </button>
           </div>
 
-          {/* Description + Button (Bottom Left) */}
-          <div className="absolute bottom-10 left-6 flex flex-col items-start gap-2">
-            <p className="text-white text-sm sm:text-base max-w-xs leading-snug">
+          {/* Description + Button */}
+          <div className="absolute bottom-20 left-6 flex flex-col items-start gap-2">
+            <p className="text-white text-wrap text-sm sm:text-base max-w-xs leading-snug">
               {video.description}
             </p>
-
             <Link
               to={`/food-partner/${video.foodPartner}`}
               className="group flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-300"
@@ -169,6 +256,29 @@ const Home = () => {
           </div>
         </div>
       ))}
+
+      {/* Footer Nav */}
+      <div className="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-black/10 backdrop-blur-sm border-t border-white/20 z-50">
+        <button
+          onClick={() => handleNav("home")}
+          className={`flex flex-col items-center text-sm ${
+            activeTab === "home" ? "text-red-500" : "text-white"
+          }`}
+        >
+          <HomeIcon size={23} />
+          <span>Home</span>
+        </button>
+
+        <button
+          onClick={() => handleNav("saved")}
+          className={`flex flex-col items-center text-sm ${
+            activeTab === "saved" ? "text-red-500" : "text-white"
+          }`}
+        >
+          <Bookmark size={23} />
+          <span>Saved</span>
+        </button>
+      </div>
     </div>
   );
 };

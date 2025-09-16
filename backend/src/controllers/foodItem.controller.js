@@ -21,7 +21,12 @@ async function createFood(req, res) {
 
     // Upload file
     const fileUploadedResult = await uploadFile(req.file.buffer, uuid());
-
+    // Before creating food item
+    if (!req.foodPartner || !req.foodPartner._id) {
+      return res
+        .status(400)
+        .json({ message: "Food partner not found or not authenticated." });
+    }
     // Save food item
     const foodItem = await foodDao.createFoodItem({
       name: req.body.name, // ✅ use req.body instead of req.name
@@ -50,43 +55,41 @@ async function getFoodItems(req, res) {
 }
 async function likeToggle(req, res) {
   const { foodId } = req.body;
-
   const user = req.user;
+
+  if (!user || !user._id) {
+    return res
+      .status(400)
+      .json({ message: "User not found or not authenticated." });
+  }
+
   const isAlreadyLiked = await LikeModel.findOne({
     user: user._id,
-    foodId,
+    food: foodId, // ✅ consistent everywhere
   });
 
   if (isAlreadyLiked) {
-    await LikeModel.deleteOne({
-      user: user._id,
-      food: foodId,
-    });
-    await foodModel.findByIdAndUpdate(foodId, {
-      $inc: { likeCount: -1 },
-    });
-    res.status(200).json({
-      message: "Food unliked successfully",
-    });
+    await LikeModel.deleteOne({ user: user._id, food: foodId });
+    await foodItemModel.findByIdAndUpdate(foodId, { $inc: { likeCount: -1 } });
+    return res.status(200).json({ message: "Food unliked successfully" });
   }
 
-  const like = await LikeModel.create({
-    user: user._id,
-    food: foodId,
-  });
-  await foodModel.findByIdAndUpdate(foodId, {
-    $inc: { likeCount: 1 },
-  });
+  const like = await LikeModel.create({ user: user._id, food: foodId });
+  await foodItemModel.findByIdAndUpdate(foodId, { $inc: { likeCount: 1 } });
 
-  res.status(201).json({
-    message: "Food like successfully",
-    like,
-  });
+  res.status(201).json({ message: "Food liked successfully", like });
 }
+
 async function saveFood(req, res) {
   const { foodId } = req.body;
 
   const user = req.user;
+  // Before using user._id
+  if (!req.user || !req.user._id) {
+    return res
+      .status(400)
+      .json({ message: "User not found or not authenticated." });
+  }
   const isAlreadysaved = await saveModel.findOne({
     user: user._id,
     foodId,
@@ -97,9 +100,11 @@ async function saveFood(req, res) {
       user: user._id,
       food: foodId,
     });
-
+    await foodItemModel.findByIdAndUpdate(foodId, {
+      $inc: { savesCount: -1 },
+    });
     res.status(200).json({
-      message: "Food saved successfully",
+      message: "Food unsaved successfully",
     });
   }
 
@@ -107,11 +112,17 @@ async function saveFood(req, res) {
     user: user._id,
     food: foodId,
   });
-
+  await foodItemModel.findByIdAndUpdate(foodId, {
+    $inc: { savesCount: 1 },
+  });
   res.status(201).json({
     message: "Food saved successfully",
     save,
   });
+}
+
+async function getSaveFood(req, res) {
+  const user = req.user;
 }
 module.exports = {
   createFood,
