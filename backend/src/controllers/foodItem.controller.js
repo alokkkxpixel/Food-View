@@ -3,6 +3,8 @@ const foodItemModel = require("../models/foodItem.model");
 const { uploadFile } = require("../service/stroage.service");
 const { v4: uuid } = require("uuid");
 const foodDao = require("../dao/food.dao");
+const LikeModel = require("../models/likes.model");
+const saveModel = require("../models/saveFood.model");
 
 async function createFood(req, res) {
   // ✅ Check validation errors first
@@ -46,7 +48,74 @@ async function getFoodItems(req, res) {
     foodItems,
   });
 }
+async function likeToggle(req, res) {
+  const { foodId } = req.body;
+
+  const user = req.user;
+  const isAlreadyLiked = await LikeModel.findOne({
+    user: user._id,
+    foodId,
+  });
+
+  if (isAlreadyLiked) {
+    await LikeModel.deleteOne({
+      user: user._id,
+      food: foodId,
+    });
+    await foodModel.findByIdAndUpdate(foodId, {
+      $inc: { likeCount: -1 },
+    });
+    res.status(200).json({
+      message: "Food unliked successfully",
+    });
+  }
+
+  const like = await LikeModel.create({
+    user: user._id,
+    food: foodId,
+  });
+  await foodModel.findByIdAndUpdate(foodId, {
+    $inc: { likeCount: 1 },
+  });
+
+  res.status(201).json({
+    message: "Food like successfully",
+    like,
+  });
+}
+async function saveFood(req, res) {
+  const { foodId } = req.body;
+
+  const user = req.user;
+  const isAlreadysaved = await saveModel.findOne({
+    user: user._id,
+    foodId,
+  });
+
+  if (isAlreadysaved) {
+    await saveModel.deleteOne({
+      user: user._id,
+      food: foodId,
+    });
+
+    res.status(200).json({
+      message: "Food saved successfully",
+    });
+  }
+
+  const save = await saveModel.create({
+    user: user._id,
+    food: foodId,
+  });
+
+  res.status(201).json({
+    message: "Food saved successfully",
+    save,
+  });
+}
 module.exports = {
   createFood,
   getFoodItems,
+  likeToggle,
+  saveFood,
 };
