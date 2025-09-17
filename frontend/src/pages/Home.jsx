@@ -10,11 +10,13 @@ import {
   Bookmark,
   Home as HomeIcon,
 } from "lucide-react";
+import ProfileMenu from "./ProfileMenu";
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
   const [liked, setLiked] = useState({});
   const [saved, setSaved] = useState({});
+  const [user, setUser] = useState({});
   const [showHeader, setShowHeader] = useState(true);
 
   const lastScrollY = useRef(0);
@@ -25,7 +27,9 @@ const Home = () => {
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/food/", { withCredentials: true })
-      .then((response) => setVideos(response.data.foodItems))
+      .then((response) => {
+        return setVideos(response.data.foodItems), setUser(response.data.user);
+      })
       .catch((err) => console.error("Error fetching videos:", err));
   }, []);
 
@@ -164,6 +168,9 @@ const Home = () => {
         <h1 className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-white">
           <Utensils size={24} /> FoodApp
         </h1>
+
+        {/* Profile */}
+        <ProfileMenu user={user} />
       </div>
 
       {/* Feed */}

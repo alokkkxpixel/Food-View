@@ -8,11 +8,14 @@ import {
   Home as HomeIcon,
 } from "lucide-react";
 import axios from "axios";
+import ShinyText from "../components/ShinyText";
 
 const SavePage = () => {
   const [videos, setVideos] = useState([]);
   const [liked, setLiked] = useState({});
   const [showHeader, setShowHeader] = useState(true);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const lastScrollY = useRef(0);
   const videoRefs = useRef([]);
@@ -22,9 +25,12 @@ const SavePage = () => {
   useEffect(() => {
     const fetchSavedVideos = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/food/saved", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "http://localhost:3000/api/food/savedfood",
+          {
+            withCredentials: true,
+          }
+        );
 
         const savedFood = res.data.savedFoods.map((item) => ({
           _id: item.food._id,
@@ -34,8 +40,18 @@ const SavePage = () => {
           savesCount: item.food.savesCount,
         }));
         setVideos(savedFood);
+
+        if (res.data.length === 0) {
+          console.log("No food founf");
+        }
       } catch (err) {
-        console.error(err);
+        if (err.response && err.response.status === 404) {
+          setError("No food found"); // custom message
+        } else {
+          setError("Something went wrong");
+        }
+      } finally {
+        setLoading(false);
       }
     };
     fetchSavedVideos();
@@ -110,8 +126,17 @@ const SavePage = () => {
 
       {/* Feed */}
       {videos.length === 0 ? (
-        <div className="h-screen flex items-center justify-center text-white text-lg">
-          No saved reels yet.
+        <div className="h-screen flex flex-col items-center justify-center bg-black/90 text-white text-lg">
+          <ShinyText
+            text="No Saved Foods 🍕!"
+            disabled={false}
+            speed={2}
+            className="text-2xl font-semibold "
+          />
+          <p className="text-gray-500 text-xs mt-3 text-center text-wrap max-w-sm">
+            Looks like you haven’t saved any food yet. Save your favorite dishes
+            to find them quickly later!
+          </p>
         </div>
       ) : (
         videos.map((video, index) => (

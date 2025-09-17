@@ -3,6 +3,7 @@ const {
   createFood,
   getFoodItems,
   saveFood,
+  getSaveFood,
 } = require("../controllers/foodItem.controller");
 const {
   authFoodPartnerMiddleware,
@@ -28,11 +29,11 @@ router.post(
 );
 
 // * GET /api/food/ [protected]
-router.get("/", authFoodPartnerMiddleware, getFoodItems);
+router.get("/", authUserMiddleware || authFoodPartnerMiddleware, getFoodItems);
 
 router.post("/like", authUserMiddleware, likeToggle);
 router.post("/save", authUserMiddleware, saveFood);
-router.get("/savedfood", authUserMiddleware, getFoodItems);
+router.get("/savedfood", authUserMiddleware, getSaveFood);
 
 
 module.exports = router;

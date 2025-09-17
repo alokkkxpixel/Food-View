@@ -46,11 +46,18 @@ async function createFood(req, res) {
 }
 
 async function getFoodItems(req, res) {
+  const user = req.user;
   const foodItems = await foodItemModel.find({});
 
   res.status(200).json({
     message: "Food items feteched successfully!!",
     foodItems,
+    user: {
+      email: user.email,
+      fullname: user.fullname,
+      id: user._id,
+      profilePic: user.profilePic,
+    },
   });
 }
 async function likeToggle(req, res) {
@@ -102,47 +109,49 @@ async function saveFood(req, res) {
     if (isAlreadySaved) {
       // 3️⃣ If already saved, unsave it
       await saveModel.deleteOne({ user: user._id, food: foodId });
-      await foodItemModel.findByIdAndUpdate(foodId, { $inc: { savesCount: -1 } });
-      return res.status(200).json({ message: "Food unsaved successfully", saved: false });
+      await foodItemModel.findByIdAndUpdate(foodId, {
+        $inc: { savesCount: -1 },
+      });
+      return res
+        .status(200)
+        .json({ message: "Food unsaved successfully", saved: false });
     }
 
     // 4️⃣ If not saved, save it
     const saved = await saveModel.create({ user: user._id, food: foodId });
     await foodItemModel.findByIdAndUpdate(foodId, { $inc: { savesCount: 1 } });
 
-    return res.status(201).json({ message: "Food saved successfully", saved: true });
+    return res
+      .status(201)
+      .json({ message: "Food saved successfully", saved: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Something went wrong", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Something went wrong", error: err.message });
   }
 }
 
-
 async function getSaveFood(req, res) {
   const user = req.user;
-  
 
-  const savedFoods = await saveModel.find({user:user._id}).populate("food")
+  const savedFoods = await saveModel.find({ user: user._id }).populate("food");
 
-
-  if(!saveFoods || savedFoods.length === 0 ){
+  if (!savedFoods || savedFoods.length === 0) {
     return res.status(404).json({
-      message:"No saved Food found!"
-
-    })
-
+      message: "No saved Food found!",
+    });
   }
 
-
   res.status(200).json({
-    message:"Saved retrived successfully",
-    savedFoods
-  })
+    message: "Saved retrived successfully",
+    savedFoods,
+  });
 }
 module.exports = {
   createFood,
   getFoodItems,
   likeToggle,
   saveFood,
-  getFoodItems
+  getSaveFood,
 };
