@@ -9,8 +9,12 @@ import {
   Utensils,
   Bookmark,
   Home as HomeIcon,
+  BadgePlus,
+  CirclePlus,
+  Store,
 } from "lucide-react";
 import ProfileMenu from "./ProfileMenu";
+import SwitchRolePopup from "./SwitchPop";
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
@@ -18,7 +22,7 @@ const Home = () => {
   const [saved, setSaved] = useState({});
   const [user, setUser] = useState({});
   const [showHeader, setShowHeader] = useState(true);
-
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const lastScrollY = useRef(0);
   const videoRefs = useRef([]);
   const navigate = useNavigate();
@@ -151,20 +155,17 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState("home");
   const handleNav = (tab) => {
     setActiveTab(tab);
-    if (tab === "saved") navigate("/savedfood");
+    if (tab) navigate(`/${tab}`);
   };
 
   return (
     <div className="h-screen w-full snap-y snap-mandatory overflow-y-scroll">
       {/* Header */}
       <div
-        className={`fixed top-0 left-0 w-full flex items-center justify-center px-4 py-3 transition-transform duration-300 z-50 ${
+        className={`fixed top-0 left-0 w-full flex items-center justify-center  bg-black/10 backdrop-blur-sm  px-4 py-2 transition-transform duration-300 z-50 ${
           showHeader ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <Link to="/" className="absolute left-4 text-white">
-          <ArrowLeft size={26} />
-        </Link>
         <h1 className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-white">
           <Utensils size={24} /> FoodApp
         </h1>
@@ -257,9 +258,9 @@ const Home = () => {
       ))}
 
       {/* Footer Nav */}
-      <div className="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-black/10 backdrop-blur-sm border-t border-white/20 z-50">
+      <div className="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-black/10 backdrop-blur-sm border-t border-white/20 z-10">
         <button
-          onClick={() => handleNav("home")}
+          onClick={() => handleNav(`home`)}
           className={`flex flex-col items-center text-sm ${
             activeTab === "home" ? "text-red-500" : "text-white"
           }`}
@@ -268,8 +269,17 @@ const Home = () => {
           <span>Home</span>
         </button>
 
+        {/* Plus Button -> Opens Popup */}
         <button
-          onClick={() => handleNav("saved")}
+          onClick={() => setIsPopupOpen(true)}
+          className="flex flex-col items-center text-white"
+        >
+          <CirclePlus className="w-6 h-6" />
+          <span className="text-xs">Add</span>
+        </button>
+
+        <button
+          onClick={() => handleNav(`savedfood`)}
           className={`flex flex-col items-center text-sm ${
             activeTab === "saved" ? "text-red-500" : "text-white"
           }`}
@@ -278,6 +288,13 @@ const Home = () => {
           <span>Saved</span>
         </button>
       </div>
+
+      {/* Popup */}
+      <SwitchRolePopup
+        role="foodPartner"
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
     </div>
   );
 };

@@ -8,6 +8,8 @@ import Home from "../pages/Home";
 import CreateFood from "../food-partner/CreateFood";
 import Profile from "../food-partner/Profile";
 import SavePage from "../pages/SavePage";
+import SwitchRolePopup from "../pages/SwitchPop";
+import GotoPop from "../pages/GotoPop";
 
 const AppRouter = () => {
   return (
@@ -20,6 +22,8 @@ const AppRouter = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/savedfood" element={<SavePage />} />
         <Route path="/create-food" element={<CreateFood />} />
+        <Route path="/goto" element={<GotoPop />} />
+
         <Route path="/food-partner/:id" element={<Profile />} />
       </Routes>
     </Router>

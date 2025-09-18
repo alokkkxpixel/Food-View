@@ -47,16 +47,17 @@ async function createFood(req, res) {
 
 async function getFoodItems(req, res) {
   const user = req.user;
+  const foodPartner = req.foodPartner;
   const foodItems = await foodItemModel.find({});
 
   res.status(200).json({
     message: "Food items feteched successfully!!",
     foodItems,
     user: {
-      email: user.email,
-      fullname: user.fullname,
-      id: user._id,
-      profilePic: user.profilePic,
+      email: user?.email || foodPartner?.email,
+      fullname: user?.fullname || foodPartner?.name,
+      id: user?._id || foodPartner?._id,
+      profilePic: user?.profilePic || foodPartner?.profilePic,
     },
   });
 }

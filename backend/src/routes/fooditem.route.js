@@ -29,7 +29,7 @@ router.post(
 );
 
 // * GET /api/food/ [protected]
-router.get("/", authUserMiddleware || authFoodPartnerMiddleware, getFoodItems);
+router.get("/", authUserMiddleware, getFoodItems);
 
 router.post("/like", authUserMiddleware, likeToggle);
 router.post("/save", authUserMiddleware, saveFood);

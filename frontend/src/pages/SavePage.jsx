@@ -6,9 +6,12 @@ import {
   ArrowLeft,
   Bookmark,
   Home as HomeIcon,
+  BadgePlus,
+  CirclePlus,
 } from "lucide-react";
 import axios from "axios";
 import ShinyText from "../components/ShinyText";
+import SwitchRolePopup from "./SwitchPop";
 
 const SavePage = () => {
   const [videos, setVideos] = useState([]);
@@ -16,7 +19,7 @@ const SavePage = () => {
   const [showHeader, setShowHeader] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const lastScrollY = useRef(0);
   const videoRefs = useRef([]);
   const navigate = useNavigate();
@@ -105,7 +108,7 @@ const SavePage = () => {
   const [activeTab, setActiveTab] = useState("saved");
   const handleNav = (tab) => {
     setActiveTab(tab);
-    if (tab === "home") navigate("/home");
+    if (tab) navigate(`/${tab}`);
   };
 
   return (
@@ -209,7 +212,7 @@ const SavePage = () => {
       {/* Footer Nav */}
       <div className="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-black/10 backdrop-blur-sm border-t border-white/20 z-50">
         <button
-          onClick={() => handleNav("home")}
+          onClick={() => handleNav(`home`)}
           className={`flex flex-col items-center text-sm ${
             activeTab === "home" ? "text-red-500" : "text-white"
           }`}
@@ -218,8 +221,16 @@ const SavePage = () => {
           <span>Home</span>
         </button>
 
+        {/* Plus Button -> Opens Popup */}
         <button
-          onClick={() => handleNav("saved")}
+          onClick={() => setIsPopupOpen(true)}
+          className="flex flex-col items-center text-white"
+        >
+          <CirclePlus className="w-6 h-6" />
+          <span className="text-xs">Add</span>
+        </button>
+        <button
+          onClick={() => handleNav(`savedfood`)}
           className={`flex flex-col items-center text-sm ${
             activeTab === "saved" ? "text-red-500" : "text-white"
           }`}
@@ -228,6 +239,13 @@ const SavePage = () => {
           <span>Saved</span>
         </button>
       </div>
+
+      {/* Popup */}
+      <SwitchRolePopup
+        role="foodPartner"
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+      />
     </div>
   );
 };

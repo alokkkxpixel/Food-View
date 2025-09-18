@@ -1,17 +1,35 @@
 import { useState } from "react";
 import { LogOut, User, Settings, CreditCard, Bell, X } from "lucide-react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileMenu({ user }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  async function LogoutHandle(e) {
+    e.preventDefault();
+
+    const res = await axios.post("http://localhost:3000/api/auth/user/logout", {
+      withCredentials: true,
+    });
+
+    console.log(res);
+
+    navigate("/user/login");
+  }
 
   return (
     <>
       {/* Trigger button */}
       <button
         onClick={() => setOpen(true)}
-        className="p-2 rounded-md bg-zinc-800 text-white"
+        className="p-2 h-12 w-12 rounded-md absolute top-0 right-3 text-white"
       >
-        Open Menu
+        <img
+          className="h-full w-full object-cover rounded-full bg-amber-600"
+          src="https://avatars.githubusercontent.com/u/124599?v=4"
+          alt=""
+        />
       </button>
 
       {/* Overlay */}
@@ -24,15 +42,15 @@ export default function ProfileMenu({ user }) {
 
       {/* Sidebar Menu */}
       <div
-        className={`fixed top-0 right-0 h-[100vh] w-80 bg-zinc-900/90 text-white z-50 transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-[100vh] w-80 bg-zinc-900/90 backdrop-blur-xl text-white z-50 transform transition-transform duration-300  ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header with close */}
-        <div className="flex items-center justify-between p-6 border-b border-zinc-700">
+        <div className="flex items-center justify-between p-6 my-3 border-b border-zinc-700">
           <div className="flex items-center gap-3">
             <img
-              src={user.profilePic}
+              src="https://avatars.githubusercontent.com/u/124599?v=4"
               alt="profile"
               className="w-12 h-12 rounded-full"
             />
@@ -64,7 +82,10 @@ export default function ProfileMenu({ user }) {
 
         {/* Logout Button */}
         <div className="p-6 border-t border-zinc-700">
-          <button className="flex items-center gap-3 w-full text-red-400 hover:text-red-500 transition">
+          <button
+            onClick={LogoutHandle}
+            className="flex items-center gap-3 w-full text-red-400 hover:text-red-500 transition"
+          >
             <LogOut className="w-5 h-5" /> Log out
           </button>
         </div>

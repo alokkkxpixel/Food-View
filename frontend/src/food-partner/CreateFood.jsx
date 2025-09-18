@@ -11,72 +11,73 @@ const CreateFood = () => {
   const [videoFile, setVideoFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  // Handle file selection
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setVideoFile(file);
-      setPreview(URL.createObjectURL(file));
-    }
-  };
-
-  // Handle drag and drop
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      setVideoFile(file);
-      setPreview(URL.createObjectURL(file));
-    }
-  };
-
-  const handleDragOver = (e) => e.preventDefault();
-
-  // Remove video
-  const handleDeleteVideo = () => {
-    setVideoFile(null);
-    setPreview(null);
-  };
-
-  // Change video (trigger file input)
-  const handleChangeVideo = () => {
-    document.getElementById("videoUpload").click();
-  };
-
-  // Submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("price", price);
-    formData.append("video", videoFile);
-
-    const response = await axios.post(
-      "http://localhost:3000/api/food/",
-      formData,
-      {
-        withCredentials: true,
+    // Handle file selection
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        setVideoFile(file);
+        setPreview(URL.createObjectURL(file));
       }
-    );
+    };
 
-    console.log("Form Submitted:", response.data);
+    // Handle drag and drop
+    const handleDrop = (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        setVideoFile(file);
+        setPreview(URL.createObjectURL(file));
+      }
+    };
 
-    // Fake delay for loading state
-    setTimeout(() => {
-      setIsSubmitting(false);
-      // alert("Food Item Created ✅");
-      handleDeleteVideo();
-      setName("");
-      setDescription("");
-      setPrice("");
-    }, 2000);
+    const handleDragOver = (e) => e.preventDefault();
 
-    navigate("/home");
-  };
+    // Remove video
+    const handleDeleteVideo = () => {
+      setVideoFile(null);
+      setPreview(null);
+    };
+
+    // Change video (trigger file input)
+    const handleChangeVideo = () => {
+      document.getElementById("videoUpload").click();
+    };
+
+    // Submit
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setIsSubmitting(true);
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("video", videoFile);
+
+      const response = await axios.post(
+        "http://localhost:3000/api/food/",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log("Form Submitted:", response.data);
+
+      // Fake delay for loading state
+      setTimeout(() => {
+        setIsSubmitting(false);
+        // alert("Food Item Created ✅");
+        handleDeleteVideo();
+        setName("");
+        setDescription("");
+        setPrice("");
+      }, 2000);
+
+      navigate("/goto");
+    };
 
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
