@@ -1,5 +1,5 @@
 const express = require("express");
-const { route } = require("../app");
+const router = express.Router();
 const {
   registerUser,
   loginUser,
@@ -7,17 +7,29 @@ const {
   registerFoodPartner,
   loginFoodPartner,
   logoutFoodPartner,
+  deleteUser,
 } = require("../controllers/auth.controller");
 const {
   registerUserValidator,
   registerFoodPartnerValidator,
 } = require("../validators/auth.validator");
 const { validate } = require("../middlewares/validate");
+const multer = require("multer");
 
-const router = express.Router();
+const upload = multer({
+  storage: multer.memoryStorage(), // ✅ fixed the typo
+});
 
-//Router of User API
-router.post("/user/register", registerUserValidator, validate, registerUser);
+// Router of User API
+router.post(
+  "/user/register",
+  upload.single("image"), // 👈 MUST match file key name in form-data
+  registerUserValidator,
+  validate,
+  registerUser
+);
+
+router.delete("/user/:id", deleteUser);
 router.post("/user/login", loginUser);
 router.post("/user/logout", logoutUser);
 
@@ -25,6 +37,7 @@ router.post("/user/logout", logoutUser);
 router.post(
   "/foodpartner/register",
   registerFoodPartnerValidator,
+  upload.single("image"),
   validate,
   registerFoodPartner
 );

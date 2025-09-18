@@ -16,7 +16,7 @@ const Like = require("../models/likes.model");
 const { likeToggle } = require("../controllers/foodItem.controller");
 const router = express.Router();
 const upload = multer({
-  stroage: multer.memoryStorage(),
+  storage: multer.memoryStorage(), // ✅ fixed the typo
 });
 
 //* POST  /api/food /[portected]

@@ -5,11 +5,18 @@ const dotenv = require("dotenv");
 const { v4: uuid } = require("uuid");
 
 const foodModel = require("../models/foodpartner.model");
+const {
+  uploadFile,
+  deleteFromImageKit,
+} = require("../service/stroage.service");
 dotenv.config();
 async function registerUser(req, res) {
   const { fullname, email, password } = req.body;
   const isUserAlreadyExist = await userModel.findOne({ email });
-
+  console.log(req.file);
+  if (!req.file) {
+    console.log("File is not found");
+  }
   if (isUserAlreadyExist) {
     return res.status(400).json({ message: "User is already Exist" });
   }
@@ -44,7 +51,15 @@ async function registerUser(req, res) {
     },
   });
 }
+async function deleteUser(req, res) {
+  const user = await userModel.findById(req.params.id);
+  if (!user) return res.status(404).json({ message: "Not found" });
 
+  await deleteFromImageKit(user.fileId);
+  await userModel.findByIdAndDelete(user._id);
+
+  res.json({ success: true, message: "User deleted" });
+}
 async function loginUser(req, res) {
   const { email, password } = req.body;
 
@@ -100,6 +115,9 @@ async function registerFoodPartner(req, res) {
       message: "Your Food Partner Account is already existed!",
     });
   }
+  if (!req.file) {
+    console.log("file is not founded!");
+  }
 
   const hashPassword = await bcrypt.hash(password, 10);
   const fileUploadedResult = await uploadFile(req.file.buffer, uuid());
@@ -137,6 +155,28 @@ async function registerFoodPartner(req, res) {
   });
 }
 
+async function deleteFoodPartner(req, res) {
+  const { id } = req.params;
+
+  const foodPartnerId = await foodModel.findById(id);
+
+  if (!foodPartnerId) {
+    return res.status(404).json({
+      message: "Food partner not founed",
+    });
+  }
+
+  await deleteFromImageKit(foodPartnerId.fileId);
+
+  const deletedFoodPartner = await foodModel.findByIdAndDelete(
+    foodPartnerId._id
+  );
+
+  return res.status(201).json({
+    message: "foodpartner deleted",
+    deletedFoodPartner,
+  });
+}
 async function loginFoodPartner(req, res) {
   const { email, password } = req.body;
 
@@ -189,9 +229,11 @@ async function logoutFoodPartner(req, res) {
 
 module.exports = {
   registerUser,
+  deleteUser,
   loginUser,
   logoutUser,
   registerFoodPartner,
+  deleteFoodPartner,
   loginFoodPartner,
   logoutFoodPartner,
 };

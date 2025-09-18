@@ -1,6 +1,7 @@
+require("dotenv").config();
 const app = require("./src/app");
 const connectDb = require("./src/db/db");
-require("dotenv").config();
+console.log("Env loaded PUBLIC:", process.env.IMAGEKIT_PUBLIC_KEY);
 
 connectDb();
 app.listen(3000, () => {

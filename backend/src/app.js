@@ -4,6 +4,7 @@ const authRoutes = require("./routes/auth.routes");
 const foodItemRoutes = require("./routes/fooditem.route");
 const foodpartnerRoutes = require("./routes/food-partner.route");
 const app = express();
+require("dotenv").config();
 const cors = require("cors");
 app.use(
   cors({
