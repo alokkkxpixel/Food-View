@@ -6,6 +6,7 @@ exports.registerFoodPartnerValidator = [
     .withMessage("Name is required")
     .isLength({ min: 2 })
     .withMessage("Name must be at least 2 characters long"),
+  body("image").notEmpty().withMessage("Profile pic is required!"),
 
   body("email")
     .notEmpty()
@@ -36,7 +37,7 @@ exports.registerUserValidator = [
     .withMessage("Full name is required")
     .isLength({ min: 2 })
     .withMessage("Full name must be at least 2 characters long"),
-
+  body("image").notEmpty().withMessage("Profile pic is required!"),
   body("email")
     .notEmpty()
     .withMessage("Email is required")

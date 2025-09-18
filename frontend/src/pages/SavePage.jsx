@@ -119,9 +119,7 @@ const SavePage = () => {
           showHeader ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <Link to="/" className="absolute left-4 text-white">
-          <ArrowLeft size={26} />
-        </Link>
+        
         <h1 className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-white">
           <Bookmark size={24} /> Saved Reels
         </h1>

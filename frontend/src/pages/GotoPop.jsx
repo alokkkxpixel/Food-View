@@ -5,28 +5,21 @@ import { Link } from "react-router-dom";
 
 export default function GotoPop() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
-      {/* Icon and Title */}
-      <div className="flex items-center gap-2 mb-6">
-        <User className="w-8 h-8 text-red-500" />
-        <h1 className="text-2xl font-semibold">Continue as User</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-300 px-4">
+      <div className="text-center">
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <User className="w-6 h-6 text-red-500" />
+          <h2 className="text-lg font-semibold">Continue as User</h2>
+        </div>
+        <p className="mt-2 text-gray-600">
+          Login to explore food & save favorites.
+        </p>
+        <Link to={"/user/login"}>
+          <button className="mt-4 w-full bg-red-500 text-white rounded-lg py-2">
+            Go to User Login
+          </button>
+        </Link>
       </div>
-
-      {/* Description */}
-      <p className="text-gray-600 text-center max-w-md mb-6">
-        Login to explore food & save your favorite items.
-      </p>
-
-      {/* Login Button */}
-
-      <Link to="/user/login">
-        <button
-          onClick={() => alert("Go to User Login")}
-          className="w-full max-w-sm bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition"
-        >
-          Go to User Login
-        </button>
-      </Link>
     </div>
   );
 }

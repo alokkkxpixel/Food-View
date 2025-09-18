@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import ProfileMenu from "./ProfileMenu";
 import SwitchRolePopup from "./SwitchPop";
+import ShinyText from "../components/ShinyText";
+import ThemeToggle from "../components/ThemeToggle";
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
@@ -113,7 +115,7 @@ const Home = () => {
     }
   };
 
-  // Toggle Save + Update Backend + LocalStorage
+  // Toggle Save + Update Backend
   // Frontend toggleSave function without localStorage
   const toggleSave = async (item) => {
     try {

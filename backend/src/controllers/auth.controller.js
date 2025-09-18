@@ -2,6 +2,8 @@ const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const { v4: uuid } = require("uuid");
+
 const foodModel = require("../models/foodpartner.model");
 dotenv.config();
 async function registerUser(req, res) {
@@ -13,8 +15,11 @@ async function registerUser(req, res) {
   }
   const hashPassword = await bcrypt.hash(password, 10);
 
+  const fileUploadedResult = await uploadFile(req.file.buffer, uuid());
   const user = await userModel.create({
     fullname,
+    image: fileUploadedResult.url,
+    fileId: fileUploadedResult.fileId,
     email,
     password: hashPassword,
   });
@@ -34,6 +39,8 @@ async function registerUser(req, res) {
       _id: user._id,
       email: user.email,
       fullaname: user.fullname,
+      image: user.image,
+      fileId: user.fileId,
     },
   });
 }
@@ -95,10 +102,12 @@ async function registerFoodPartner(req, res) {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-
+  const fileUploadedResult = await uploadFile(req.file.buffer, uuid());
   const foodPartner = await foodModel.create({
     name,
     email,
+    image: fileUploadedResult.url,
+    fileId: fileUploadedResult.fileId,
     password: hashPassword,
     phoneNo,
     address,
@@ -118,6 +127,8 @@ async function registerFoodPartner(req, res) {
     user: {
       _id: foodPartner._id,
       email: foodPartner.email,
+      image: foodPartner.image,
+      fileId: foodPartner.fileId,
       name: foodPartner.name,
       address: foodPartner.address,
       Phone_no: foodPartner.phoneNo,

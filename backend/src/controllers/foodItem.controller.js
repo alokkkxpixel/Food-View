@@ -33,6 +33,7 @@ async function createFood(req, res) {
       description: req.body.description, // ✅ fixed typo (was req.decription)
       price: req.body.price,
       video: fileUploadedResult.url,
+      fileId: fileUploadedResult.fileId,
       foodPartner: req.foodPartner._id,
     });
 
