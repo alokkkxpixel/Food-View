@@ -58,7 +58,7 @@ async function getFoodItems(req, res) {
       email: user?.email || foodPartner?.email,
       fullname: user?.fullname || foodPartner?.name,
       id: user?._id || foodPartner?._id,
-      profilePic: user?.profilePic || foodPartner?.profilePic,
+      image: user?.image || foodPartner?.image,
     },
   });
 }

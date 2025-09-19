@@ -77,8 +77,8 @@ export default function ProfileMenu({ user }) {
         className="p-2 h-12 w-12 rounded-md absolute top-0 right-3 text-white"
       >
         <img
-          className="h-full w-full object-cover rounded-full bg-amber-600"
-          src="https://avatars.githubusercontent.com/u/124599?v=4"
+          className="h-full w-full object-cover rounded-full bg--600"
+          src={user.image}
           alt="profile"
         />
       </button>
@@ -101,7 +101,7 @@ export default function ProfileMenu({ user }) {
         <div className="flex items-center justify-between p-6 my-3 border-b border-zinc-700">
           <div className="flex items-center gap-3">
             <img
-              src="https://avatars.githubusercontent.com/u/124599?v=4"
+              src={user.image}
               alt="profile"
               className="w-12 h-12 rounded-full"
             />

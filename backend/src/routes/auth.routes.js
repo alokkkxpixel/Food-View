@@ -36,8 +36,8 @@ router.post("/user/logout", logoutUser);
 //ROuter of food Partner API
 router.post(
   "/foodpartner/register",
-  registerFoodPartnerValidator,
   upload.single("image"),
+  registerFoodPartnerValidator,
   validate,
   registerFoodPartner
 );
