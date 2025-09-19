@@ -15,6 +15,7 @@ import {
   ArrowLeftIcon,
   ArrowRight,
   SquareArrowOutUpRight,
+  Trash2,
 } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -23,10 +24,26 @@ export default function ProfileMenu({ user }) {
   const [open, setOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [devOpen, setDevOpen] = useState(false);
+  const [settingOpen, setSettingOpen] = useState(false);
   const [foodPartnerOpen, setFoodPartnerOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
+  async function handleDelete() {
+    const userId = user.id;
+    try {
+      await axios.delete(`http://localhost:5000/api/auth/user/${userId}`, {
+        withCredentials: true,
+      });
+
+      setIsOpen(false);
+      // show temporary feedback (toast/snackbar here if you like)
+      alert("Account deleted successfully. 👋"); // replace alert if you use toast library
+      navigate("/user/register"); // redirect after deletion
+    } catch (err) {
+      console.error("Delete error:", err.response?.data || err.message);
+    }
+  }
   async function LogoutHandle(e) {
     e.preventDefault();
     const res = await axios.post("http://localhost:3000/api/auth/user/logout", {
@@ -208,11 +225,63 @@ export default function ProfileMenu({ user }) {
           </div>
 
           {/* Settings */}
-          <button className="flex items-center gap-3 px-4 py-3 w-full text-base hover:bg-zinc-800 transition">
-            <Settings className="w-5 h-5" /> Settings
-          </button>
-        </div>
 
+          <button
+            onClick={() => setSettingOpen(!settingOpen)}
+            className="flex items-center justify-between px-4 py-3 w-full text-base hover:bg-zinc-800 transition"
+          >
+            <div className="flex items-center gap-3">
+              <Settings className="w-5 h-5" /> Settings
+            </div>
+            {settingOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
+          <Dropdown isOpen={settingOpen}>
+            <button
+              onClick={() => setIsOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+            >
+              <Trash2 size={18} /> Delete Account
+            </button>
+          </Dropdown>
+        </div>
+        {/* Modal Overlay */}
+        {isOpen && (
+          <div className="fixed inset-0  bg-black/50 flex items-center justify-center z-50">
+            {/* Modal Card */}
+            <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg w-96 p-6 relative">
+              {/* Close button */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-3 right-3 text-gray-400 hover:text-red-600"
+              >
+                <X size={20} />
+              </button>
+
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Delete Account
+              </h2>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">
+                ⚠️ Are you sure you want to delete your account? This action is
+                permanent and cannot be undone!
+              </p>
+
+              <div className="flex justify-end gap-3 mt-6">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2 rounded-md bg-gray-200 dark:bg-zinc-700 text-gray-800 dark:text-white hover:bg-gray-300 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                >
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Logout */}
         <div className="p-6 border-t border-zinc-700">
           <button

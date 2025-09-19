@@ -25,7 +25,7 @@ export default function FoodPartnerLogin() {
 
     setEmail(""), setPassword("");
 
-    navigate("/create-food");
+    navigate("/food-partner/profile");
   };
   return (
     <AuthLayout

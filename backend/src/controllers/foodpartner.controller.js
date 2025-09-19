@@ -23,6 +23,31 @@ async function getFoodPartnerById(req, res) {
   });
 }
 
+async function getLoggedInFoodPartner(req, res) {
+  try {
+    const foodPartnerId = req.foodPartner.id; // comes from JWT via auth middleware
+
+    const foodPartner = await foodPartnerModel.findById(foodPartnerId);
+    if (!foodPartner) {
+      return res.status(404).json({ message: "Food partner not found" });
+    }
+
+    const foodItems = await foodItemModel.find({ foodPartner: foodPartnerId });
+
+    res.status(200).json({
+      message: "Food partner profile retrieved successfully",
+      foodPartner: {
+        ...foodPartner.toObject(),
+        foodItems,
+      },
+    });
+  } catch (err) {
+    console.error("❌ Profile fetch error", err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 module.exports = {
   getFoodPartnerById,
+  getLoggedInFoodPartner,
 };

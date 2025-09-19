@@ -28,7 +28,6 @@ router.post(
   validate,
   registerUser
 );
-
 router.delete("/user/:id", deleteUser);
 router.post("/user/login", loginUser);
 router.post("/user/logout", logoutUser);

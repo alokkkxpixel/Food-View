@@ -76,7 +76,7 @@ const CreateFood = () => {
         setPrice("");
       }, 2000);
 
-      navigate("/goto");
+      navigate("/food-partner/profile");
     };
 
   return (
