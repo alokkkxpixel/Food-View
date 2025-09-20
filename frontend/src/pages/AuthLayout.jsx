@@ -4,7 +4,7 @@ export default function AuthLayout({ title, subtitle, children }) {
   const location = useLocation();
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex  items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md">
         {/* Branding */}
         <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">

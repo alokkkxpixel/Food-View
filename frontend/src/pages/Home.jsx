@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Heart,
@@ -20,16 +20,20 @@ import ThemeToggle from "../components/ThemeToggle";
 import VisitButton from "../components/VisitButton";
 import Header from "../components/Header";
 import { useUser } from "../context/UserContext";
+import FooterNav from "../components/FooterNav";
+import VideoActions from "../components/VideoAction";
+import { useVideoActions } from "../Hooks/useVideoActions";
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
-  const [liked, setLiked] = useState({});
-  const [saved, setSaved] = useState({});
+  // const [liked, setLiked] = useState({});
+  // const [saved, setSaved] = useState({});
+  const { liked, saved, toggleLike, toggleSave } = useVideoActions();
   // const [user, setUser] = useState({});
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  // const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [user, setUser] = useState({});
   const videoRefs = useRef([]);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { setUserData } = useUser();
   // Fetch videos
   useEffect(() => {
@@ -73,81 +77,81 @@ const Home = () => {
     };
   }, [videos]);
 
-  // Toggle Like + Update Backend
-  const toggleLike = async (item) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/food/like",
-        { foodId: item._id },
-        { withCredentials: true }
-      );
+  // // Toggle Like + Update Backend
+  // const toggleLike = async (item) => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:3000/api/food/like",
+  //       { foodId: item._id },
+  //       { withCredentials: true }
+  //     );
 
-      if (response.data.like) {
-        // Video liked
-        setVideos((prev) =>
-          prev.map((v) =>
-            v._id === item._id ? { ...v, likeCount: (v.likeCount || 0) + 1 } : v
-          )
-        );
-        setLiked((prev) => ({ ...prev, [item._id]: true }));
-      } else {
-        // Video unliked
-        setVideos((prev) =>
-          prev.map((v) =>
-            v._id === item._id ? { ...v, likeCount: (v.likeCount || 1) - 1 } : v
-          )
-        );
-        setLiked((prev) => ({ ...prev, [item._id]: false }));
-      }
-    } catch (err) {
-      console.error("Error liking video:", err);
-    }
-  };
+  //     if (response.data.like) {
+  //       // Video liked
+  //       setVideos((prev) =>
+  //         prev.map((v) =>
+  //           v._id === item._id ? { ...v, likeCount: (v.likeCount || 0) + 1 } : v
+  //         )
+  //       );
+  //       setLiked((prev) => ({ ...prev, [item._id]: true }));
+  //     } else {
+  //       // Video unliked
+  //       setVideos((prev) =>
+  //         prev.map((v) =>
+  //           v._id === item._id ? { ...v, likeCount: (v.likeCount || 1) - 1 } : v
+  //         )
+  //       );
+  //       setLiked((prev) => ({ ...prev, [item._id]: false }));
+  //     }
+  //   } catch (err) {
+  //     console.error("Error liking video:", err);
+  //   }
+  // };
 
-  // Toggle Save + Update Backend
-  // Frontend toggleSave function without localStorage
-  const toggleSave = async (item) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/food/save",
-        { foodId: item._id },
-        { withCredentials: true }
-      );
+  // // Toggle Save + Update Backend
+  // // Frontend toggleSave function without localStorage
+  // const toggleSave = async (item) => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:3000/api/food/save",
+  //       { foodId: item._id },
+  //       { withCredentials: true }
+  //     );
 
-      console.log(response.data);
+  //     console.log(response.data);
 
-      if (response.data.saved) {
-        // Video saved
-        setVideos((prev) =>
-          prev.map((v) =>
-            v._id === item._id
-              ? { ...v, savesCount: (v.savesCount || 0) + 1 }
-              : v
-          )
-        );
-        setSaved((prev) => ({ ...prev, [item._id]: true }));
-      } else {
-        // Video unsaved
-        setVideos((prev) =>
-          prev.map((v) =>
-            v._id === item._id
-              ? { ...v, savesCount: (v.savesCount || 1) - 1 }
-              : v
-          )
-        );
-        setSaved((prev) => ({ ...prev, [item._id]: false }));
-      }
-    } catch (err) {
-      console.error("Error saving video:", err);
-    }
-  };
+  //     if (response.data.saved) {
+  //       // Video saved
+  //       setVideos((prev) =>
+  //         prev.map((v) =>
+  //           v._id === item._id
+  //             ? { ...v, savesCount: (v.savesCount || 0) + 1 }
+  //             : v
+  //         )
+  //       );
+  //       setSaved((prev) => ({ ...prev, [item._id]: true }));
+  //     } else {
+  //       // Video unsaved
+  //       setVideos((prev) =>
+  //         prev.map((v) =>
+  //           v._id === item._id
+  //             ? { ...v, savesCount: (v.savesCount || 1) - 1 }
+  //             : v
+  //         )
+  //       );
+  //       setSaved((prev) => ({ ...prev, [item._id]: false }));
+  //     }
+  //   } catch (err) {
+  //     console.error("Error saving video:", err);
+  //   }
+  // };
 
   // Footer navigation
-  const [activeTab, setActiveTab] = useState("home");
-  const handleNav = (tab) => {
-    setActiveTab(tab);
-    if (tab) navigate(`/${tab}`);
-  };
+  // const [activeTab, setActiveTab] = useState("home");
+  // const handleNav = (tab) => {
+  //   setActiveTab(tab);
+  //   if (tab) navigate(`/${tab}`);
+  // };
 
   return (
     <div className="h-screen w-full snap-y snap-mandatory overflow-y-scroll">
@@ -186,36 +190,16 @@ const Home = () => {
           </div>
 
           {/* Right Actions */}
-          <div className="absolute right-4 bottom-45 flex flex-col items-center gap-6">
-            {/* Like */}
-            <button onClick={() => toggleLike(video)}>
-              <Heart
-                size={35}
-                className={`transition-all bg-gray-300/10 backdrop-blur-md p-1 rounded-full duration-300 ${
-                  liked[video._id]
-                    ? "fill-red-500 text-red-500 scale-110"
-                    : "text-white hover:scale-110"
-                }`}
-              />
-              <h2 className="mt-1 text-white text-sm">
-                {video.likeCount || 0}
-              </h2>
-            </button>
-
-            {/* Save */}
-            <button onClick={() => toggleSave(video)}>
-              <Bookmark
-                size={32}
-                className={`transition-all bg-gray-300/10 backdrop-blur-md p-1 rounded-full duration-300 ${
-                  saved[video._id]
-                    ? "fill-white text-white scale-110"
-                    : "text-white hover:scale-110"
-                }`}
-              />
-              <h2 className="mt-1 text-white text-sm">
-                {video.savesCount || 0}
-              </h2>
-            </button>
+          <div className="absolute right-4 bottom-40">
+            <VideoActions
+              video={video}
+              isLiked={liked[video._id]}
+              isSaved={saved[video._id]}
+              onToggleLike={(vid) => toggleLike(vid, setVideos)}
+              onToggleSave={(vid) => toggleSave(vid, setVideos)}
+              showSave={true}
+              allowLike={true}
+            />
           </div>
 
           {/* Description + Button */}
@@ -231,43 +215,14 @@ const Home = () => {
       ))}
 
       {/* Footer Nav */}
-      <div className="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-black/10 backdrop-blur-sm border-t border-white/20 z-10">
-        <button
-          onClick={() => handleNav(`home`)}
-          className={`flex flex-col items-center text-sm ${
-            activeTab === "home" ? "text-red-500" : "text-white"
-          }`}
-        >
-          <HomeIcon size={23} />
-          <span>Home</span>
-        </button>
-
-        {/* Plus Button -> Opens Popup */}
-        <button
-          onClick={() => setIsPopupOpen(true)}
-          className="flex flex-col items-center text-white"
-        >
-          <CirclePlus className="w-6 h-6" />
-          <span className="text-xs">Add</span>
-        </button>
-
-        <button
-          onClick={() => handleNav(`savedfood`)}
-          className={`flex flex-col items-center text-sm ${
-            activeTab === "saved" ? "text-red-500" : "text-white"
-          }`}
-        >
-          <Bookmark size={23} />
-          <span>Saved</span>
-        </button>
-      </div>
+      <FooterNav NavData="home" />
 
       {/* Popup */}
-      <SwitchRolePopup
+      {/* <SwitchRolePopup
         role="foodPartner"
         isOpen={isPopupOpen}
-        onClose={() => setIsPopupOpen(false)}
-      />
+        onClose={() => setIsPopupOpen(sfalse)}
+      /> */}
     </div>
   );
 };

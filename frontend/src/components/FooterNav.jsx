@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import SwitchRolePopup from "../pages/SwitchPop";
 import { Bookmark, CirclePlus, HomeIcon } from "lucide-react";
 
-const FooterNav = () => {
+const FooterNav = ({ NavData }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const navigate = useNavigate();
   // Footer navigation
-  const [activeTab, setActiveTab] = useState("saved");
+  const [activeTab, setActiveTab] = useState(NavData);
   const handleNav = (tab) => {
     setActiveTab(tab);
     if (tab) navigate(`/${tab}`);

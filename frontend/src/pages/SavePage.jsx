@@ -15,13 +15,16 @@ import SwitchRolePopup from "./SwitchPop";
 import VisitButton from "../components/VisitButton";
 import FooterNav from "../components/FooterNav";
 import Header from "../components/Header";
+import VideoActions from "../components/VideoAction";
+import { useVideoActions } from "../Hooks/useVideoActions";
 // import { useUser } from "../context/UserContext";
 
 const SavePage = () => {
   const [videos, setVideos] = useState([]);
-  const [liked, setLiked] = useState({});
+  // const [liked, setLiked] = useState({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const { liked, saved, toggleLike, toggleSave } = useVideoActions();
   // const { setUserData } = useUser();
   const [user, setUser] = useState({});
   // const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -94,10 +97,10 @@ const SavePage = () => {
     };
   }, [videos]);
 
-  // Toggle like
-  const toggleLike = (id) => {
-    setLiked((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
+  // // Toggle like
+  // const toggleLike = (id) => {
+  //   setLiked((prev) => ({ ...prev, [id]: !prev[id] }));
+  // };
 
   // Footer navigation
   // const [activeTab, setActiveTab] = useState("saved");
@@ -156,21 +159,16 @@ const SavePage = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
             {/* Right Actions */}
-            <div className="absolute right-4 bottom-45 flex flex-col items-center gap-6">
-              {/* Like */}
-              <button onClick={() => toggleLike(video._id)}>
-                <Heart
-                  size={35}
-                  className={`transition-all bg-gray-300/10 backdrop-blur-md p-1 rounded-full duration-300 ${
-                    liked[video._id]
-                      ? "fill-red-500 text-red-500 scale-110"
-                      : "text-white hover:scale-110"
-                  }`}
-                />
-                <h2 className="mt-1 text-white text-sm">
-                  {liked[video._id] ? "1" : "0"}
-                </h2>
-              </button>
+            <div className="absolute right-4 bottom-40">
+              <VideoActions
+                video={video}
+                isLiked={liked[video._id]}
+                isSaved={saved[video._id]}
+                onToggleLike={(vid) => toggleLike(vid, setVideos)}
+                onToggleSave={(vid) => toggleSave(vid, setVideos)}
+                showSave={false}
+                allowLike={true}
+              />
             </div>
 
             {/* Description + Button */}
@@ -187,7 +185,7 @@ const SavePage = () => {
       )}
 
       {/* Footer Nav */}
-      <FooterNav />
+      <FooterNav NavData="saved" />
       {/* Popup */}
       {/* <SwitchRolePopup
         role="foodPartner"
