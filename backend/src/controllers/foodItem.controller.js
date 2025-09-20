@@ -5,6 +5,7 @@ const { v4: uuid } = require("uuid");
 const foodDao = require("../dao/food.dao");
 const LikeModel = require("../models/likes.model");
 const saveModel = require("../models/saveFood.model");
+const userModel = require("../models/user.model");
 
 async function createFood(req, res) {
   // ✅ Check validation errors first
@@ -48,18 +49,13 @@ async function createFood(req, res) {
 
 async function getFoodItems(req, res) {
   const user = req.user;
-  const foodPartner = req.foodPartner;
+  console.log(user);
   const foodItems = await foodItemModel.find({});
 
   res.status(200).json({
     message: "Food items feteched successfully!!",
     foodItems,
-    user: {
-      email: user?.email || foodPartner?.email,
-      fullname: user?.fullname || foodPartner?.name,
-      id: user?._id || foodPartner?._id,
-      image: user?.image || foodPartner?.image,
-    },
+    user,
   });
 }
 async function likeToggle(req, res) {
@@ -148,12 +144,82 @@ async function getSaveFood(req, res) {
   res.status(200).json({
     message: "Saved retrived successfully",
     savedFoods,
+    user,
   });
 }
+
+// DELETE /api/food/:id
+async function deleteFood(req, res) {
+  try {
+    const { id } = req.params; // foodId from frontend
+    console.log(id);
+    // 1. Find the food in DB
+    const food = await foodItemModel.findById(id);
+    if (!food) {
+      return res.status(404).json({ message: "Food item not found" });
+    }
+    console.log("food", food._id);
+    // 2. Delete file from ImageKit first (if fileId exists)
+    if (food.fileId) {
+      try {
+        await axios.delete(`https://api.imagekit.io/v1/files/${food.fileId}`, {
+          auth: {
+            username: process.env.IMAGEKIT_PRIVATE_KEY, // use Private Key here
+            password: "", // ImageKit requires empty password
+          },
+        });
+        console.log("✅ Deleted file from ImageKit:", food.fileId);
+      } catch (err) {
+        console.warn(
+          "⚠️ Failed deleting from ImageKit:",
+          err.response?.data || err.message
+        );
+        // Still continue to delete DB entry
+      }
+    }
+
+    // 3. Delete from MongoDB
+    await foodItemModel.findByIdAndDelete(id);
+
+    res.json({ success: true, message: "Food item deleted successfully" });
+  } catch (err) {
+    console.error("❌ Delete food error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+async function updateFoodPrice(req, res) {
+  try {
+    const { id } = req.params; // Food ID
+    const { price } = req.body;
+
+    if (!price) {
+      return res.status(400).json({ message: "Price is required" });
+    }
+
+    const food = await foodItemModel.findByIdAndUpdate(
+      id,
+      { price },
+      { new: true } // return updated doc
+    );
+
+    if (!food) {
+      return res.status(404).json({ message: "Food not found" });
+    }
+
+    res.json({ success: true, message: "Price updated", food });
+  } catch (err) {
+    console.error("Update price error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 module.exports = {
   createFood,
   getFoodItems,
   likeToggle,
   saveFood,
   getSaveFood,
+  deleteFood,
+  updateFoodPrice,
 };

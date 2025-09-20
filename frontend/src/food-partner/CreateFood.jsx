@@ -11,7 +11,6 @@ const CreateFood = () => {
   const [videoFile, setVideoFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     // Handle file selection
     const handleFileChange = (e) => {

@@ -8,6 +8,7 @@ const {
   loginFoodPartner,
   logoutFoodPartner,
   deleteUser,
+  deleteFoodPartner,
 } = require("../controllers/auth.controller");
 const {
   registerUserValidator,
@@ -40,6 +41,7 @@ router.post(
   validate,
   registerFoodPartner
 );
+router.delete("/foodpartner/:id", deleteFoodPartner);
 router.post("/foodpartner/login", loginFoodPartner);
 router.post("/foodpartner/logout", logoutFoodPartner);
 module.exports = router;

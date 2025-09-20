@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+// import { useUser } from "../context/UserContext";
 
 export default function ProfileMenu({ user }) {
   const [open, setOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function ProfileMenu({ user }) {
   const [foodPartnerOpen, setFoodPartnerOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  // const { userData } = useUser();
 
   async function handleDelete() {
     const userId = user.id;

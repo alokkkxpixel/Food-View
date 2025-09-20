@@ -1,12 +1,14 @@
 import axios from "axios";
+import { ChevronLeft, MapPin, MoveLeft } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
   const [videos, setVideos] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get(`http://localhost:3000/api/food-partner/${id}`, {
@@ -30,29 +32,30 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <Link className="absolute left-5 top-5" onClick={() => navigate(-1)}>
+        <ChevronLeft />
+      </Link>
       {/* Profile Section */}
       <div className="flex flex-col items-center py-6 border-b border-gray-800">
         {/* Profile Pic */}
         <div className="w-24 h-24  rounded-full bg-gray-700 overflow-hidden">
           <img
             className="w-full h-full object-center object-cover "
-            src="https://images.unsplash.com/photo-1548534988-7c20f8a8a783?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src={profile.image}
             alt=""
           />
         </div>
 
         {/* Name + Address */}
         <h2 className="my-3 text-xl font-semibold">{profile.name}</h2>
-        <p className="text-sm px-2 text-center text-gray-400">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis
-          exercitationem amet nostrum, at error eius. Lorem ipsum, dolor sit
-          amet consectetur adipisicing elit. Sequi, quaerat?
+        <p className="text-sm px-2 flex items-center gap-3 text-center text-gray-400">
+          <MapPin size={15} /> {profile.address}
         </p>
 
         {/* Stats */}
         <div className="flex justify-center gap-10 mt-4">
           <div className="text-center">
-            <p className="text-lg font-bold">{profile.totalMeals || 0}</p>
+            <p className="text-lg font-bold">{videos.length || 0}</p>
             <p className="text-sm text-gray-400">Meals</p>
           </div>
           <div className="text-center">

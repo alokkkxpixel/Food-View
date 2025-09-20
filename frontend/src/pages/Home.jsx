@@ -17,18 +17,20 @@ import ProfileMenu from "./ProfileMenu";
 import SwitchRolePopup from "./SwitchPop";
 import ShinyText from "../components/ShinyText";
 import ThemeToggle from "../components/ThemeToggle";
+import VisitButton from "../components/VisitButton";
+import Header from "../components/Header";
+import { useUser } from "../context/UserContext";
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
   const [liked, setLiked] = useState({});
   const [saved, setSaved] = useState({});
-  const [user, setUser] = useState({});
-  const [showHeader, setShowHeader] = useState(true);
+  // const [user, setUser] = useState({});
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const lastScrollY = useRef(0);
+  const [user, setUser] = useState({});
   const videoRefs = useRef([]);
   const navigate = useNavigate();
-
+  const { setUserData } = useUser();
   // Fetch videos
   useEffect(() => {
     axios
@@ -37,11 +39,12 @@ const Home = () => {
         return (
           setVideos(response.data.foodItems),
           setUser(response.data.user),
-          console.log(response.data.user)
+          setUserData(response.data.user),
+          console.log(response.data)
         );
       })
       .catch((err) => console.error("Error fetching videos:", err));
-  }, []);
+  }, [setUserData]);
 
   // Play/Pause on scroll
   useEffect(() => {
@@ -69,24 +72,6 @@ const Home = () => {
       });
     };
   }, [videos]);
-
-  // Show/hide header on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-
-      if (currentY > lastScrollY.current) {
-        setShowHeader(false);
-      } else if (currentY < lastScrollY.current) {
-        setShowHeader(true);
-      }
-
-      lastScrollY.current = currentY;
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Toggle Like + Update Backend
   const toggleLike = async (item) => {
@@ -167,18 +152,7 @@ const Home = () => {
   return (
     <div className="h-screen w-full snap-y snap-mandatory overflow-y-scroll">
       {/* Header */}
-      <div
-        className={`fixed top-0 left-0 w-full flex items-center justify-center  bg-black/10 backdrop-blur-sm  px-4 py-2 transition-transform duration-300 z-50 ${
-          showHeader ? "translate-y-0" : "-translate-y-full"
-        }`}
-      >
-        <h1 className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-white">
-          <Utensils size={24} /> FoodApp
-        </h1>
-
-        {/* Profile */}
-        <ProfileMenu user={user} />
-      </div>
+      <Header header={"FoodieHub"} user={user} />
 
       {/* Feed */}
       {videos.map((video, index) => (
@@ -249,15 +223,8 @@ const Home = () => {
             <p className="text-white text-wrap text-sm sm:text-base max-w-xs leading-snug">
               {video.description}
             </p>
-            <Link
-              to={`/food-partner/${video.foodPartner}`}
-              className="group flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm sm:text-base font-medium transition-all duration-300"
-            >
-              Visit Store
-              <ArrowRight
-                className="opacity-0 group-hover:opacity-100 translate-x-[-5px] group-hover:translate-x-0 transition-all duration-300"
-                size={18}
-              />
+            <Link to={`/food-partner/${video.foodPartner}`}>
+              <VisitButton />
             </Link>
           </div>
         </div>

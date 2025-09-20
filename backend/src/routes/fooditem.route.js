@@ -4,6 +4,8 @@ const {
   getFoodItems,
   saveFood,
   getSaveFood,
+  deleteFood,
+  updateFoodPrice,
 } = require("../controllers/foodItem.controller");
 const {
   authFoodPartnerMiddleware,
@@ -30,7 +32,8 @@ router.post(
 
 // * GET /api/food/ [protected]
 router.get("/", authUserMiddleware, getFoodItems);
-
+router.delete("/:id", deleteFood);
+router.put("/:id/price", updateFoodPrice);
 router.post("/like", authUserMiddleware, likeToggle);
 router.post("/save", authUserMiddleware, saveFood);
 router.get("/savedfood", authUserMiddleware, getSaveFood);
