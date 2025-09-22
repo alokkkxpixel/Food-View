@@ -43,7 +43,7 @@ const Header = () => {
         </h1>
 
         {/* Profile */}
-        <ProfileMenu user={userData} />
+        {userData && <ProfileMenu user={userData} />}
       </div>
     </div>
   );
