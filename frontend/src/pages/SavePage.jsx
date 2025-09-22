@@ -176,9 +176,6 @@ const SavePage = () => {
               <p className="text-white text-wrap text-sm sm:text-base max-w-xs leading-snug">
                 {video.description}
               </p>
-              <Link to={`/food-partner/${video.foodPartner}`}>
-                <VisitButton />
-              </Link>
             </div>
           </div>
         ))

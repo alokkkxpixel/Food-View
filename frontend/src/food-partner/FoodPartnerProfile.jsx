@@ -12,6 +12,8 @@ import {
   LogOut,
   User,
   Trash,
+  Heart,
+  BookmarkCheck,
 } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -235,7 +237,18 @@ export default function FoodPartnerProfile() {
                 className="w-full h-64 rounded-md object-cover"
               />
 
-              <h3 className="text-lg font-bold mt-3">{food.name}</h3>
+              <div className="flex items-center justify-between py-2">
+                <h3 className="text-lg font-bold mt-3">{food.name}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm flex flex-col items-center text-zinc-500  ">
+                    <Heart size={19} /> {food.likeCount}
+                  </h3>
+                  <h3 className="text-sm flex flex-col items-center text-zinc-500  ">
+                    <BookmarkCheck size={19} /> {food.savesCount}
+                  </h3>
+                </div>
+              </div>
+
               <p className="text-gray-400">{food.description}</p>
 
               {/* Price Inline Edit */}

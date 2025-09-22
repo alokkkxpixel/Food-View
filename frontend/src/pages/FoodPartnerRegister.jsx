@@ -12,6 +12,8 @@ export default function FoodPartnerRegister() {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null); // 👈 profile image file
+  const [loading, setLoading] = useState(false);
+
   const [preview, setPreview] = useState(null); // 👈 preview URL
 
   const navigate = useNavigate();
@@ -67,6 +69,8 @@ export default function FoodPartnerRegister() {
       navigate("/create-food");
     } catch (err) {
       console.error("Register failed:", err.response?.data || err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -174,9 +178,14 @@ export default function FoodPartnerRegister() {
 
         <button
           type="submit"
-          className="w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-semibold"
+          disabled={loading}
+          className={`w-full py-2 rounded-lg font-semibold transition-colors ${
+            loading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-red-500 hover:bg-red-600 text-white"
+          }`}
         >
-          Register as Partner
+          {loading ? "Processing..." : "Create Account"}
         </button>
       </form>
 

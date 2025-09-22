@@ -212,8 +212,8 @@ export default function ProfileMenu({ user }) {
             </button>
             <Dropdown isOpen={devOpen}>
               <a
-                href="https://github.com/your-repo-here"
-                target="_blank"
+                href="https://github.com/alokkkxpixel/Food-View"
+                target="This App Repo"
                 rel="noopener noreferrer"
                 className="mx-auto w-fit font-medium px-6 py-3 my-4 flex items-center justify-center gap-2 
                  bg-white border border-gray-300 rounded-md text-sm text-gray-800 
