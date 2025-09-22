@@ -1,6 +1,9 @@
 const { validationResult } = require("express-validator");
 const foodItemModel = require("../models/foodItem.model");
-const { uploadFile } = require("../service/stroage.service");
+const {
+  uploadFile,
+  deleteFromImageKit,
+} = require("../service/stroage.service");
 const { v4: uuid } = require("uuid");
 const foodDao = require("../dao/food.dao");
 const LikeModel = require("../models/likes.model");
@@ -160,23 +163,7 @@ async function deleteFood(req, res) {
     }
     console.log("food", food._id);
     // 2. Delete file from ImageKit first (if fileId exists)
-    if (food.fileId) {
-      try {
-        await axios.delete(`https://api.imagekit.io/v1/files/${food.fileId}`, {
-          auth: {
-            username: process.env.IMAGEKIT_PRIVATE_KEY, // use Private Key here
-            password: "", // ImageKit requires empty password
-          },
-        });
-        console.log("✅ Deleted file from ImageKit:", food.fileId);
-      } catch (err) {
-        console.warn(
-          "⚠️ Failed deleting from ImageKit:",
-          err.response?.data || err.message
-        );
-        // Still continue to delete DB entry
-      }
-    }
+    await deleteFromImageKit(food.fileId);
 
     // 3. Delete from MongoDB
     await foodItemModel.findByIdAndDelete(id);

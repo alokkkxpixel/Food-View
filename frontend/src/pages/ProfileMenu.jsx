@@ -32,9 +32,9 @@ export default function ProfileMenu({ user }) {
   // const { userData } = useUser();
 
   async function handleDelete() {
-    const userId = user.id;
+    const userId = user._id;
     try {
-      await axios.delete(`http://localhost:5000/api/auth/user/${userId}`, {
+      await axios.delete(`http://localhost:3000/api/auth/user/${userId}`, {
         withCredentials: true,
       });
 

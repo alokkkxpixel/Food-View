@@ -53,6 +53,7 @@ async function registerUser(req, res) {
 }
 async function deleteUser(req, res) {
   const user = await userModel.findById(req.params.id);
+  console.log(req.params.id);
   if (!user) return res.status(404).json({ message: "Not found" });
 
   await deleteFromImageKit(user.fileId);

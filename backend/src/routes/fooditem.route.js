@@ -24,8 +24,8 @@ const upload = multer({
 //* POST  /api/food /[portected]
 router.post(
   "/",
-  authFoodPartnerMiddleware,
   upload.single("video"),
+  authFoodPartnerMiddleware,
   createFoodValidator,
   createFood
 );

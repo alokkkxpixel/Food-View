@@ -2,18 +2,19 @@ import { useState } from "react";
 import AuthLayout from "./AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Camera, X } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react";
 
 export default function UserRegister() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [image, setImage] = useState(null); // 👈 Profile image file
-  const [preview, setPreview] = useState(null); // 👈 Preview image
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({}); // 👈 store validation errors
 
   const navigate = useNavigate();
 
-  // handle file select
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -22,17 +23,27 @@ export default function UserRegister() {
     }
   };
 
-  // handle form submit
+  const validateForm = () => {
+    const newErrors = {};
+    if (!fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!email.includes("@")) newErrors.email = "Please enter a valid email";
+    if (password.length < 8)
+      newErrors.password = "The password must be at least 8 characters long";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // true if no errors
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return; // stop if errors exist
+
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("fullname", fullName);
     formData.append("email", email);
     formData.append("password", password);
-    if (image) {
-      formData.append("image", image);
-    }
+    if (image) formData.append("image", image);
 
     try {
       const response = await axios.post(
@@ -52,10 +63,13 @@ export default function UserRegister() {
       setPassword("");
       setImage(null);
       setPreview(null);
+      setErrors({});
 
       navigate("/home");
     } catch (err) {
       console.error("❌ Register failed:", err.response?.data || err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,13 +78,22 @@ export default function UserRegister() {
       title="Create Account"
       subtitle="Sign up to discover amazing food"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-50">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="w-10 h-10 text-red-500 animate-spin" />
+            <p className="text-sm text-gray-200">Creating your account...</p>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4 relative">
         <h2 className="text-xl font-sans text-center dark:text-gray-400">
           Register as User
         </h2>
 
-        {/* Profile Image Upload */}
-        <div className="flex flex-col  relative items-center gap-2">
+        {/* Profile Image */}
+        <div className="flex flex-col items-center gap-2">
           <label className="cursor-pointer relative">
             <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-gray-600 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
               {preview ? (
@@ -90,8 +113,6 @@ export default function UserRegister() {
               className="hidden"
             />
           </label>
-
-          {/* Discard Button OUTSIDE */}
           {preview && (
             <button
               type="button"
@@ -99,45 +120,68 @@ export default function UserRegister() {
                 setImage(null);
                 setPreview(null);
               }}
-              className="mt-2 p-1 absolute top-0 right-20 rounded-full bg-zinc-500/90 text-white text-xs font-medium hover:bg-red-700 transition"
+              className="mt-2 px-3 py-1 rounded-md bg-red-600 text-white text-xs hover:bg-red-700 transition"
             >
-              <X />
+              Discard Image ✕
             </button>
           )}
         </div>
 
-        {/* Full Name */}
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-        />
+        {/* Name */}
+        <div>
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className={`w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white
+              ${errors.fullName ? "border-red-500" : "border-gray-300"}`}
+          />
+          {errors.fullName && (
+            <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+          )}
+        </div>
 
         {/* Email */}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-        />
+        <div>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={`w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white
+              ${errors.email ? "border-red-500" : "border-gray-300"}`}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+          )}
+        </div>
 
         {/* Password */}
-        <input
-          type="password"
-          placeholder="Password (min 6 characters)"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-        />
+        <div>
+          <input
+            type="password"
+            placeholder="Password (min 8 characters)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={`w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white
+              ${errors.password ? "border-red-500" : "border-gray-300"}`}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+          )}
+        </div>
 
         <button
           type="submit"
-          className="w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-semibold"
+          disabled={loading}
+          className={`w-full py-2 rounded-lg font-semibold transition-colors ${
+            loading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-red-500 hover:bg-red-600 text-white"
+          }`}
         >
-          Create Account
+          {loading ? "Processing..." : "Create Account"}
         </button>
       </form>
 

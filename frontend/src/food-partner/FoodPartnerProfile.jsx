@@ -64,7 +64,7 @@ export default function FoodPartnerProfile() {
       });
       alert("Food deleted successfully!");
       // Update UI by removing deleted food
-      setFoods((prev) => prev.filter((f) => f.id !== foodId));
+      setFoods((prev) => prev.filter((f) => f._id !== foodId));
     } catch (err) {
       console.error("Delete error:", err.response?.data || err.message);
       alert("Error deleting food!");
@@ -73,7 +73,6 @@ export default function FoodPartnerProfile() {
   async function handleFoodPartnerDelete(foodId) {
     if (!window.confirm("Delete your foodPartner Account?")) return;
     try {
-      console.log(foodId);
       await axios.delete(
         `http://localhost:3000/api/auth/foodpartner/${foodId}`,
         {
@@ -81,6 +80,8 @@ export default function FoodPartnerProfile() {
         }
       );
       alert("FoodPartner deleted successfully!");
+      console.log(foodId);
+
       // Update UI by removing deleted food
     } catch (err) {
       console.error("Delete error:", err.response?.data || err.message);
