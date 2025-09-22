@@ -11,6 +11,7 @@ import SavePage from "../pages/SavePage";
 import SwitchRolePopup from "../pages/SwitchPop";
 import GotoPop from "../pages/GotoPop";
 import FoodPartnerProfile from "../food-partner/FoodPartnerProfile";
+import LandingPage from "../pages/LandingPage";
 
 const AppRouter = () => {
   return (
@@ -24,12 +25,10 @@ const AppRouter = () => {
         <Route path="/savedfood" element={<SavePage />} />
         <Route path="/create-food" element={<CreateFood />} />
         <Route path="/goto" element={<GotoPop />} />
+        <Route path="/" element={<LandingPage />} />
 
         <Route path="/food-partner/:id" element={<Profile />} />
-        <Route
-          path="/food-partner/profile"
-          element={<FoodPartnerProfile />}
-        />
+        <Route path="/food-partner/profile" element={<FoodPartnerProfile />} />
       </Routes>
     </Router>
   );
