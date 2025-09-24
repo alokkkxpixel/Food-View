@@ -17,8 +17,8 @@ Here’s how the app looks on a mobile viewport (simulated):
 
 | Screen | Description |
 |---|---|
-  |<img src="docs/user-phone.png" alt="Mobile Home" width="250"/> | Vertical “TikTok-style” video scroll feed |
- | <img src="docs/partner-phone.png" alt="Upload View" width="250"/>| Food partner upload / management view |
+  |<img src="docs/user-phone.png" alt="Mobile Home" width="200"/> | Vertical “TikTok-style” video scroll feed |
+ | <img src="docs/partner-phone.png" alt="Upload View" width="200"/>| Food partner upload / management view |
 
 > *You can place mobile screenshots under a `docs/` folder (e.g. `docs/mobile-home.png`, `docs/mobile-upload.png`, etc.).*
 
