@@ -40,12 +40,9 @@ const Home = () => {
     axios
       .get("http://localhost:3000/api/food/", { withCredentials: true })
       .then((response) => {
-        return (
-          setVideos(response.data.foodItems),
-          setUser(response.data.user),
-          setUserData(response.data.user),
-          console.log(response.data)
-        );
+        setVideos(response.data.foodItems);
+        setUser(response.data.user);
+        setUserData(response.data.user);
       })
       .catch((err) => console.error("Error fetching videos:", err));
   }, [setUserData]);

@@ -48,10 +48,10 @@ export default function ProfileMenu({ user }) {
   }
   async function LogoutHandle(e) {
     e.preventDefault();
-    const res = await axios.post("http://localhost:3000/api/auth/user/logout", {
+    await axios.post("http://localhost:3000/api/auth/user/logout", {
       withCredentials: true,
     });
-    console.log(res);
+    
     navigate("/user/login");
   }
 

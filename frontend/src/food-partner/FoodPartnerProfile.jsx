@@ -60,7 +60,7 @@ export default function FoodPartnerProfile() {
   async function handleDelete(foodId) {
     if (!window.confirm("Delete this food item?")) return;
     try {
-      console.log(foodId);
+      // console.log(foodId);
       await axios.delete(`http://localhost:3000/api/food/${foodId}`, {
         withCredentials: true,
       });
@@ -82,7 +82,7 @@ export default function FoodPartnerProfile() {
         }
       );
       alert("FoodPartner deleted successfully!");
-      console.log(foodId);
+      // console.log(foodId);
 
       // Update UI by removing deleted food
     } catch (err) {
@@ -97,7 +97,7 @@ export default function FoodPartnerProfile() {
         { price: newPrice },
         { withCredentials: true }
       );
-      console.log(res);
+      res;
 
       // ✅ Optimistically update foods array in state
       setFoods((prevFoods) =>

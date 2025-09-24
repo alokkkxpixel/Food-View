@@ -43,7 +43,7 @@ export default function FoodPartnerRegister() {
     }
 
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:3000/api/auth/foodpartner/register",
         formData,
         {
@@ -54,7 +54,7 @@ export default function FoodPartnerRegister() {
         }
       );
 
-      console.log("Registered:", response.data);
+      // console.log("Registered:", response.data);
 
       // reset
       setBusinessName("");

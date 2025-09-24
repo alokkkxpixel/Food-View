@@ -46,16 +46,16 @@ export default function UserRegister() {
     if (image) formData.append("image", image);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/user/register",
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+       await axios.post(
+         "http://localhost:3000/api/auth/user/register",
+         formData,
+         {
+           withCredentials: true,
+           headers: { "Content-Type": "multipart/form-data" },
+         }
+       );
 
-      console.log("✅ Registered user:", response.data);
+
 
       // reset
       setFullName("");

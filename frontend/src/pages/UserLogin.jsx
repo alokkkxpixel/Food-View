@@ -11,18 +11,18 @@ export default function UserLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.post(
-      "http://localhost:3000/api/auth/user/login",
-      {
-        email,
-        password,
-      },
-      {
-        withCredentials: true,
-      }
-    );
+  await axios.post(
+    "http://localhost:3000/api/auth/user/login",
+    {
+      email,
+      password,
+    },
+    {
+      withCredentials: true,
+    }
+  );
 
-    console.log(response.data);
+
 
     setEmail(""), setPassword("");
     navigate("/home");

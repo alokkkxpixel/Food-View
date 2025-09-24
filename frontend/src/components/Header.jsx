@@ -12,7 +12,7 @@ const Header = () => {
   const { userData } = useUser();
 
   useEffect(() => {
-    console.log("User data in context now:", userData);
+    "User data in context now:", userData;
   }, [userData]);
   // Show/hide header on scroll
   useEffect(() => {

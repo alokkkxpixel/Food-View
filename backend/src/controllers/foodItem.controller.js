@@ -52,7 +52,7 @@ async function createFood(req, res) {
 
 async function getFoodItems(req, res) {
   const user = req.user;
-  console.log(user);
+
   const foodItems = await foodItemModel.find({});
 
   res.status(200).json({
@@ -155,13 +155,11 @@ async function getSaveFood(req, res) {
 async function deleteFood(req, res) {
   try {
     const { id } = req.params; // foodId from frontend
-    console.log(id);
     // 1. Find the food in DB
     const food = await foodItemModel.findById(id);
     if (!food) {
       return res.status(404).json({ message: "Food item not found" });
     }
-    console.log("food", food._id);
     // 2. Delete file from ImageKit first (if fileId exists)
     await deleteFromImageKit(food.fileId);
 

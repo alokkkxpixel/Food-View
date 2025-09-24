@@ -41,7 +41,7 @@ const SavePage = () => {
             withCredentials: true,
           }
         );
-        setUser(res.data.user), console.log(res.data);
+        setUser(res.data.user);
 
         const savedFood = res.data.savedFoods.map((item) => ({
           _id: item.food._id,
@@ -55,7 +55,7 @@ const SavePage = () => {
         setVideos(savedFood);
 
         if (res.data.length === 0) {
-          console.log("No food founf");
+          // console.log("No food founf");
         }
       } catch (err) {
         if (err.response && err.response.status === 404) {

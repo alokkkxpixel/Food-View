@@ -63,7 +63,7 @@ const CreateFood = () => {
         }
       );
 
-      console.log("Form Submitted:", response.data);
+      "Form Submitted:", response.data;
 
       // Fake delay for loading state
       setTimeout(() => {

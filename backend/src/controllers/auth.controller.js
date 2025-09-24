@@ -13,9 +13,7 @@ dotenv.config();
 async function registerUser(req, res) {
   const { fullname, email, password } = req.body;
   const isUserAlreadyExist = await userModel.findOne({ email });
-  console.log(req.file);
   if (!req.file) {
-    console.log("File is not found");
   }
   if (isUserAlreadyExist) {
     return res.status(400).json({ message: "User is already Exist" });
@@ -53,7 +51,6 @@ async function registerUser(req, res) {
 }
 async function deleteUser(req, res) {
   const user = await userModel.findById(req.params.id);
-  console.log(req.params.id);
   if (!user) return res.status(404).json({ message: "Not found" });
 
   await deleteFromImageKit(user.fileId);
@@ -117,7 +114,6 @@ async function registerFoodPartner(req, res) {
     });
   }
   if (!req.file) {
-    console.log("file is not founded!");
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
