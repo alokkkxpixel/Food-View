@@ -11,6 +11,19 @@
 
 A TikTok-style video platform for food discovery where users can browse food videos and food partners can showcase their offerings. <cite/>
 
+## 📱 Mobile Preview
+
+Here’s how the app looks on a mobile viewport (simulated):
+
+| Screen | Description |
+|---|---|
+| ![Mobile Home Feed](docs/mobile-home.png) | Vertical “TikTok-style” video scroll feed |
+| ![Mobile Upload / Partner View](docs/mobile-upload.png) | Food partner upload / management view |
+
+> *You can place mobile screenshots under a `docs/` folder (e.g. `docs/mobile-home.png`, `docs/mobile-upload.png`, etc.).*
+
+---
+
 ## 🚀 Features
 
 ### For Regular Users
