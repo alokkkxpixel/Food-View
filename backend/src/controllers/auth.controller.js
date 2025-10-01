@@ -9,10 +9,21 @@ const {
   uploadFile,
   deleteFromImageKit,
 } = require("../service/stroage.service");
+const {
+  create,
+  findByEmail,
+  deleteById,
+  findById,
+} = require("../dao/userFood");
+const {
+  findByEmailPartner,
+  findByIdPartner,
+  deleteByIdPartner,
+} = require("../dao/foodpartner.doa");
 dotenv.config();
 async function registerUser(req, res) {
   const { fullname, email, password } = req.body;
-  const isUserAlreadyExist = await userModel.findOne({ email });
+  const isUserAlreadyExist = await findByEmail(email);
   if (!req.file) {
   }
   if (isUserAlreadyExist) {
@@ -21,13 +32,14 @@ async function registerUser(req, res) {
   const hashPassword = await bcrypt.hash(password, 10);
 
   const fileUploadedResult = await uploadFile(req.file.buffer, uuid());
-  const user = await userModel.create({
+  const userdata = {
     fullname,
     image: fileUploadedResult.url,
     fileId: fileUploadedResult.fileId,
     email,
     password: hashPassword,
-  });
+  };
+  const user = await create(userdata);
 
   const token = jwt.sign(
     {
@@ -50,18 +62,18 @@ async function registerUser(req, res) {
   });
 }
 async function deleteUser(req, res) {
-  const user = await userModel.findById(req.params.id);
+  const user = await findById(req.params.id);
   if (!user) return res.status(404).json({ message: "Not found" });
 
   await deleteFromImageKit(user.fileId);
-  await userModel.findByIdAndDelete(user._id);
+  await deleteById(user._id);
 
   res.json({ success: true, message: "User deleted" });
 }
 async function loginUser(req, res) {
   const { email, password } = req.body;
 
-  const user = await userModel.findOne({
+  const user = await findByEmail({
     email,
   });
 
@@ -104,9 +116,7 @@ async function logoutUser(req, res) {
 
 async function registerFoodPartner(req, res) {
   const { name, email, password, phoneNo, address, contactName } = req.body;
-  const isFoodpartnerExist = await foodModel.findOne({
-    email,
-  });
+  const isFoodpartnerExist = await findByEmailPartner(email);
 
   if (isFoodpartnerExist) {
     return res.status(400).json({
@@ -118,7 +128,7 @@ async function registerFoodPartner(req, res) {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const fileUploadedResult = await uploadFile(req.file.buffer, uuid());
-  const foodPartner = await foodModel.create({
+  const foodPartner = await createPartner({
     name,
     email,
     image: fileUploadedResult.url,
@@ -155,7 +165,7 @@ async function registerFoodPartner(req, res) {
 async function deleteFoodPartner(req, res) {
   const { id } = req.params;
 
-  const foodPartnerId = await foodModel.findById(id);
+  const foodPartnerId = await findByIdPartner(id);
 
   if (!foodPartnerId) {
     return res.status(404).json({
@@ -165,9 +175,7 @@ async function deleteFoodPartner(req, res) {
 
   await deleteFromImageKit(foodPartnerId.fileId);
 
-  const deletedFoodPartner = await foodModel.findByIdAndDelete(
-    foodPartnerId._id
-  );
+  const deletedFoodPartner = await deleteByIdPartner(foodPartnerId._id);
 
   return res.status(201).json({
     message: "foodpartner deleted",
@@ -177,7 +185,7 @@ async function deleteFoodPartner(req, res) {
 async function loginFoodPartner(req, res) {
   const { email, password } = req.body;
 
-  const foodpartner = await foodModel.findOne({
+  const foodpartner = await findByEmailPartner({
     email,
   });
 
