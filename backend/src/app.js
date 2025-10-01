@@ -8,7 +8,7 @@ require("dotenv").config();
 const cors = require("cors");
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "hthttps://food-view-flame.vercel.app/",
     credentials: true,
   })
 );
