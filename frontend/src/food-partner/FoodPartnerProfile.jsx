@@ -31,7 +31,7 @@ export default function FoodPartnerProfile() {
     async function fetchProfile() {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/food-partner/profile",
+          "https://food-view-ystf.onrender.com/api/food-partner/profile",
           {
             withCredentials: true,
           }
@@ -61,9 +61,12 @@ export default function FoodPartnerProfile() {
     if (!window.confirm("Delete this food item?")) return;
     try {
       // console.log(foodId);
-      await axios.delete(`http://localhost:3000/api/food/${foodId}`, {
-        withCredentials: true,
-      });
+      await axios.delete(
+        `https://food-view-ystf.onrender.com/api/food/${foodId}`,
+        {
+          withCredentials: true,
+        }
+      );
       alert("Food deleted successfully!");
       // Update UI by removing deleted food
       setFoods((prev) => prev.filter((f) => f._id !== foodId));
@@ -76,7 +79,7 @@ export default function FoodPartnerProfile() {
     if (!window.confirm("Delete your foodPartner Account?")) return;
     try {
       await axios.delete(
-        `http://localhost:3000/api/auth/foodpartner/${foodId}`,
+        `https://food-view-ystf.onrender.com/api/auth/foodpartner/${foodId}`,
         {
           withCredentials: true,
         }
@@ -93,7 +96,7 @@ export default function FoodPartnerProfile() {
   async function handleSavePrice(foodId, newPrice) {
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/food/${foodId}/price`,
+        `https://food-view-ystf.onrender.com/api/food/${foodId}/price`,
         { price: newPrice },
         { withCredentials: true }
       );
@@ -115,7 +118,7 @@ export default function FoodPartnerProfile() {
   async function handleLogout() {
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/foodpartner/logout",
+        "https://food-view-ystf.onrender.com/api/auth/foodpartner/logout",
         {},
         { withCredentials: true }
       );

@@ -36,7 +36,7 @@ const SavePage = () => {
     const fetchSavedVideos = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/food/savedfood",
+          "https://food-view-ystf.onrender.com/api/food/savedfood",
           {
             withCredentials: true,
           }

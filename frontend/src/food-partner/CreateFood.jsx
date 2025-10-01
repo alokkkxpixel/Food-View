@@ -56,7 +56,7 @@ const CreateFood = () => {
       formData.append("video", videoFile);
 
       const response = await axios.post(
-        "http://localhost:3000/api/food/",
+        "https://food-view-ystf.onrender.com/api/food/",
         formData,
         {
           withCredentials: true,

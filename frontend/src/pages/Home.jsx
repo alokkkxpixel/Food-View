@@ -38,7 +38,9 @@ const Home = () => {
   // Fetch videos
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/food/", { withCredentials: true })
+      .get("https://food-view-ystf.onrender.com/api/food/", {
+        withCredentials: true,
+      })
       .then((response) => {
         setVideos(response.data.foodItems);
         setUser(response.data.user);
@@ -78,7 +80,7 @@ const Home = () => {
   // const toggleLike = async (item) => {
   //   try {
   //     const response = await axios.post(
-  //       "http://localhost:3000/api/food/like",
+  //       "https://food-view-ystf.onrender.com/api/food/like",
   //       { foodId: item._id },
   //       { withCredentials: true }
   //     );
@@ -110,7 +112,7 @@ const Home = () => {
   // const toggleSave = async (item) => {
   //   try {
   //     const response = await axios.post(
-  //       "http://localhost:3000/api/food/save",
+  //       "https://food-view-ystf.onrender.com/api/food/save",
   //       { foodId: item._id },
   //       { withCredentials: true }
   //     );

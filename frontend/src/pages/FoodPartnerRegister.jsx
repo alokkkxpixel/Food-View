@@ -44,7 +44,7 @@ export default function FoodPartnerRegister() {
 
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/foodpartner/register",
+        "https://food-view-ystf.onrender.com/api/auth/foodpartner/register",
         formData,
         {
           withCredentials: true,

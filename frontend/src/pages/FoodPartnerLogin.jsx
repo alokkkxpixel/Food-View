@@ -11,7 +11,7 @@ export default function FoodPartnerLogin() {
     e.preventDefault();
 
      await axios.post(
-       "http://localhost:3000/api/auth/foodpartner/login",
+       "https://food-view-ystf.onrender.com/api/auth/foodpartner/login",
        {
          email,
          password,

@@ -34,9 +34,12 @@ export default function ProfileMenu({ user }) {
   async function handleDelete() {
     const userId = user._id;
     try {
-      await axios.delete(`http://localhost:3000/api/auth/user/${userId}`, {
-        withCredentials: true,
-      });
+      await axios.delete(
+        `https://food-view-ystf.onrender.com/api/auth/user/${userId}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       setIsOpen(false);
       // show temporary feedback (toast/snackbar here if you like)
@@ -48,10 +51,13 @@ export default function ProfileMenu({ user }) {
   }
   async function LogoutHandle(e) {
     e.preventDefault();
-    await axios.post("http://localhost:3000/api/auth/user/logout", {
-      withCredentials: true,
-    });
-    
+    await axios.post(
+      "https://food-view-ystf.onrender.com/api/auth/user/logout",
+      {
+        withCredentials: true,
+      }
+    );
+
     navigate("/user/login");
   }
 

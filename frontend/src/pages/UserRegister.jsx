@@ -47,7 +47,7 @@ export default function UserRegister() {
 
     try {
        await axios.post(
-         "http://localhost:3000/api/auth/user/register",
+         "https://food-view-ystf.onrender.com/api/auth/user/register",
          formData,
          {
            withCredentials: true,

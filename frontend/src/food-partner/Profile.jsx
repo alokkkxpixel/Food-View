@@ -11,7 +11,7 @@ const Profile = () => {
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/food-partner/${id}`, {
+      .get(`https://food-view-ystf.onrender.com/api/food-partner/${id}`, {
         withCredentials: true,
       })
       .then((response) => {
