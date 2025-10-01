@@ -73,9 +73,7 @@ async function deleteUser(req, res) {
 async function loginUser(req, res) {
   const { email, password } = req.body;
 
-  const user = await findByEmail({
-    email,
-  });
+  const user = await findByEmail(email);
 
   if (!user) {
     return res.status(400).json({
@@ -185,9 +183,7 @@ async function deleteFoodPartner(req, res) {
 async function loginFoodPartner(req, res) {
   const { email, password } = req.body;
 
-  const foodpartner = await findByEmailPartner({
-    email,
-  });
+  const foodpartner = await findByEmailPartner(email);
 
   if (!foodpartner) {
     return res.status(400).json({
