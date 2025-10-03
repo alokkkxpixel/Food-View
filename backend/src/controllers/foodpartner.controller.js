@@ -29,12 +29,12 @@ async function getLoggedInFoodPartner(req, res) {
   try {
     const foodPartnerId = req.foodPartner.id; // comes from JWT via auth middleware
 
-    const foodPartner = await foodPartnerModel.findById(foodPartnerId);
+    const foodPartner = await findByIdPartner(foodPartnerId);
     if (!foodPartner) {
       return res.status(404).json({ message: "Food partner not found" });
     }
 
-    const foodItems = await foodItemModel.find({ foodPartner: foodPartnerId });
+    const foodItems = await findFood({ foodPartner: foodPartnerId });
 
     res.status(200).json({
       message: "Food partner profile retrieved successfully",
