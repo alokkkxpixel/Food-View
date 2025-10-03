@@ -1,11 +1,13 @@
+const { findFood } = require("../dao/food.dao");
+const { findByIdPartner } = require("../dao/foodpartner.doa");
 const foodItemModel = require("../models/foodItem.model");
 const foodPartnerModel = require("../models/foodpartner.model");
 async function getFoodPartnerById(req, res) {
   const foodPartnerId = req.params.id;
   console.log(foodPartnerId);
-  const foodPartner = await foodPartnerModel.findById(foodPartnerId);
+  const foodPartner = await findByIdPartner(foodPartnerId);
 
-  const foodItemByFoodPartner = await foodItemModel.find({
+  const foodItemByFoodPartner = await findFood({
     foodPartner: foodPartnerId,
   });
 

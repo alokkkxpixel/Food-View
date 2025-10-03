@@ -15,7 +15,7 @@ const Profile = () => {
         withCredentials: true,
       })
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
         setProfile(response.data.foodPartner);
         setVideos(response.data.foodPartner.foodItems);
       })

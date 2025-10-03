@@ -7,8 +7,12 @@ async function createFoodItem(data) {
 async function findFoodById(id) {
   return await foodItemModel.findById(id);
 }
+async function findFood(data) {
+  return await foodItemModel.find(data);
+}
 
 module.exports = {
   createFoodItem,
   findFoodById,
+  findFood,
 };
