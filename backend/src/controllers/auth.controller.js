@@ -48,11 +48,13 @@ async function registerUser(req, res) {
     },
     process.env.JWT_SECRET
   );
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true, // true on production (https)
-    sameSite: "none", // required for cross-site cookies
-  });
+ res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,        // true in production (https only)
+  sameSite: "none",    // important for cross-origin
+  maxAge: 7 * 24 * 60 * 60 * 1000, // keep for 7 days
+});
+
 
   return res.status(201).json({
     message: "User register Successfully",
@@ -99,11 +101,13 @@ async function loginUser(req, res) {
     },
     process.env.JWT_SECRET
   );
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true, // true on production (https)
-    sameSite: "none", // required for cross-site cookies
-  });
+ res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,        // true in production (https only)
+  sameSite: "none",    // important for cross-origin
+  maxAge: 7 * 24 * 60 * 60 * 1000, // keep for 7 days
+});
+
 
   return res.status(201).json({
     message: "User Loging successfulyy!!",
@@ -150,11 +154,13 @@ async function registerFoodPartner(req, res) {
     process.env.JWT_SECRET
   );
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true, // true on production (https)
-    sameSite: "none", // required for cross-site cookies
-  });
+ res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,        // true in production (https only)
+  sameSite: "none",    // important for cross-origin
+  maxAge: 7 * 24 * 60 * 60 * 1000, // keep for 7 days
+});
+
 
   return res.status(201).json({
     message: "Your Foodpartner Account is created successfully!",
@@ -220,11 +226,13 @@ async function loginFoodPartner(req, res) {
     process.env.JWT_SECRET
   );
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true, // true on production (https)
-    sameSite: "none", // required for cross-site cookies
-  });
+ res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,        // true in production (https only)
+  sameSite: "none",    // important for cross-origin
+  maxAge: 7 * 24 * 60 * 60 * 1000, // keep for 7 days
+});
+
 
   return res.status(201).json({
     message: "Foodpartner login successfully!!",
