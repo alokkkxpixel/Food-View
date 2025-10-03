@@ -9,7 +9,7 @@ export function useVideoActions(initialLiked = {}, initialSaved = {}) {
   const toggleLike = useCallback(async (video, setVideos) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/food/like",
+        "https://food-view-ystf.onrender.com/api/food/like",
         { foodId: video._id },
         { withCredentials: true }
       );
@@ -35,7 +35,7 @@ export function useVideoActions(initialLiked = {}, initialSaved = {}) {
   const toggleSave = useCallback(async (video, setVideos) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/food/save",
+        "https://food-view-ystf.onrender.com/api/food/save",
         { foodId: video._id },
         { withCredentials: true }
       );
