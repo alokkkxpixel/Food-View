@@ -144,7 +144,11 @@ async function registerFoodPartner(req, res) {
     process.env.JWT_SECRET
   );
 
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true, // true on production (https)
+    sameSite: "none", // required for cross-site cookies
+  });
 
   return res.status(201).json({
     message: "Your Foodpartner Account is created successfully!",
@@ -210,7 +214,11 @@ async function loginFoodPartner(req, res) {
     process.env.JWT_SECRET
   );
 
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true, // true on production (https)
+    sameSite: "none", // required for cross-site cookies
+  });
 
   return res.status(201).json({
     message: "Foodpartner login successfully!!",
