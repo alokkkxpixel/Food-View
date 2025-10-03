@@ -19,6 +19,7 @@ const {
   findByEmailPartner,
   findByIdPartner,
   deleteByIdPartner,
+  createPartner,
 } = require("../dao/foodpartner.doa");
 dotenv.config();
 async function registerUser(req, res) {
